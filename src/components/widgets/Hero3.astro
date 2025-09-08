@@ -1,0 +1,115 @@
+---
+import { Picture } from 'astro:assets';
+import heroImage from '~/assets/images/hero-image.png';
+import heroVideo from '../assets/videos/artEvolves_hero.mp4';
+import Button from '~/components/ui/Button.astro';
+
+import type { Hero as Props } from '~/types';
+
+const {
+  title = await Astro.slots.render('title'),
+  subtitle = await Astro.slots.render('subtitle'),
+  tagline,
+  content = await Astro.slots.render('content'),
+  actions = await Astro.slots.render('actions'),
+  image = await Astro.slots.render('image'),
+  backgroundImage, // New prop for background image
+  id,
+  bg = await Astro.slots.render('bg'),
+} = Astro.props;
+---
+
+<section class="relative h-[80vh] md:h-screen w-full not-prose" {...id ? { id } : {}}>
+  {/* Background Image Layer */}
+  <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+    <div class="video-container relative w-full h-screen">
+      <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+        <source src={heroVideo} type="video/mp4" />
+      </video>
+    </div>
+
+    <style>
+      .video-container {
+        overflow: hidden;
+      }
+
+      video {
+        /* Ensure video always fills container while maintaining aspect ratio */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+      }
+    </style>
+    <!-- {
+      backgroundImage ? (
+        <Picture
+          src={heroImage}
+          alt="Background"
+          sizes="100vw"
+          widths={[400, 768, 1024, 2040]}
+          class="absolute inset-0 w-full h-full object-cover filter"
+          loading="eager"
+        />
+      ) : (
+        <slot name="bg">{bg ? <Fragment set:html={bg} /> : null}</slot>
+      )
+    } -->
+    {/* Overlay */}
+    <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+  </div>
+
+  <div class="relative h-full max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="pt-0 md:pt-[76px] pointer-events-none"></div>
+    <div class="h-full flex items-center justify-center">
+      <div class="text-center max-w-5xl mx-auto">
+        {
+          tagline && (
+            <p
+              class="text-base text-white font-bold tracking-wide uppercase intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+              set:html={tagline}
+            />
+          )
+        }
+        {
+          title && (
+            <h1
+              class="text-5xl md:text-6xl font-bold leading-tighter tracking-tighter mb-4 font-heading text-white intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+              set:html={title}
+            />
+          )
+        }
+        <div class="max-w-3xl mx-auto">
+          {
+            subtitle && (
+              <p
+                class="text-xl text-white mb-6 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+                set:html={subtitle}
+              />
+            )
+          }
+          {
+            actions && (
+              <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-4 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+                {Array.isArray(actions) ? (
+                  actions.map((action) => (
+                    <div class="flex w-full sm:w-auto">
+                      <Button {...(action || {})} class="w-full sm:mb-0 text-white hover:text-primary" />
+                    </div>
+                  ))
+                ) : (
+                  <Fragment set:html={actions} />
+                )}
+              </div>
+            )
+          }
+        </div>
+        {content && <Fragment set:html={content} />}
+      </div>
+    </div>
+  </div>
+</section>

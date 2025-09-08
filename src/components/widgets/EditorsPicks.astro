@@ -1,0 +1,121 @@
+---
+import type { Content as Props } from '~/types';
+import WidgetWrapper from '../ui/WidgetWrapper.astro';
+import authorImage from '~/assets/images/art-evolves.png';
+
+import { getCollection } from 'astro:content';
+
+const { category } = Astro.props as { category?: string };
+const allArticles = await getCollection('articles');
+let filteredArticles;
+
+if (category) {
+  filteredArticles = allArticles
+    .filter(article => 'category' in article.data && article.data.category === category)
+    .sort((a, b) => {
+      const dateB = a.data.date instanceof Date ? a.data.date : new Date(a.data.date || '');
+      const dateA = b.data.date instanceof Date ? b.data.date : new Date(b.data.date || '');
+      return dateA.getTime() - dateB.getTime();
+    })
+    .slice(0, 4);
+} else {
+  filteredArticles = allArticles
+    .filter(article => article.data.featured)
+    .sort((a, b) => {
+      const dateB = a.data.date instanceof Date ? a.data.date : new Date(a.data.date || '');
+      const dateA = b.data.date instanceof Date ? b.data.date : new Date(b.data.date || '');
+      return dateA.getTime() - dateB.getTime();
+    })
+    .slice(0, 4);
+}
+
+const mainArticle = filteredArticles[0];
+const secondaryArticles = filteredArticles.slice(1, 4);
+
+// Basic slug cleaning function (replace with your cleanSlug if available)
+const cleanSlug = (text) => {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+};
+
+const {
+  // Unused props commented out to suppress ESLint warnings
+  // title = await Astro.slots.render('title'),
+  // subtitle = await Astro.slots.render('subtitle'),
+  // tagline,
+  // content = await Astro.slots.render('content'),
+  // callToAction,
+  // items = [],
+  // columns,
+  // image = await Astro.slots.render('image'),
+  // isReversed = false,
+  isAfterContent = false,
+
+  id,
+  isDark = false,
+  classes = {},
+  bg = await Astro.slots.render('bg'),
+} = Astro.props;
+
+---
+
+<WidgetWrapper
+  id={id}
+  isDark={isDark}
+  containerClass={`max-w-7xl mx-auto ${isAfterContent ? 'pt-2 md:pt-4 lg:pt-6' : ''} ${classes?.container ?? ''}`}
+  bg={bg}
+>
+
+  <h2 class="text-3xl font-black mb-4">{category ? `${category}` : ''}</h2>
+  <div class="flex flex-col lg:flex-row gap-8">
+    {mainArticle ? (
+      <div class="relative bg-cover bg-center rounded-xl shadow-lg h-96" style={`background-image: url(${mainArticle.data.image})`}>
+        <div class="absolute inset-0 bg-black bg-opacity-30 rounded-xl"></div>
+        <div class="relative p-8 text-white dark:text-white">
+          <span class="inline-block px-3 py-1 mb-4 text-xs uppercase bg-gray-100 text-gray-700 dark:text-gray-300 rounded-full">
+            {new Date(mainArticle.data.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase()}
+          </span>
+          <h3 class="text-2xl font-bold mb-2">
+            <a href={`/${mainArticle.data.category.toLowerCase()}/${cleanSlug(mainArticle.data.title)}`} class="text-white dark:text-white hover:underline">{mainArticle.data.title}</a>
+          </h3>
+          <p class="mb-4">{mainArticle.data.excerpt}</p>
+          <div class="flex items-center">
+              <img src={authorImage} alt={mainArticle.data.author} class="w-10 h-10 rounded-full mr-2" />
+            <span class="text-sm">{mainArticle.data.author}</span>
+          </div>
+        </div>
+      </div>
+    ) : (
+      <p>No articles found.</p>
+    )}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {secondaryArticles.length > 0 ? (
+        secondaryArticles.map(article => (
+          <div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
+            <a href={`/${article.data.category.toLowerCase()}/${cleanSlug(article.data.title)}`} >
+            <img src={article.data.image} alt={article.data.title} class="w-full h-48 object-cover" />
+            </a>
+            <div class="p-4">
+              <span class="inline-block px-3 py-1 mb-2 text-xs uppercase bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full">
+                {new Date(article.data.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase()}
+              </span>
+              <h4 class="text-xl font-bold mb-2">
+                <a href={`/${article.data.category.toLowerCase()}/${cleanSlug(article.data.title)}`} class="text-gray-900 dark:text-white hover:underline">{article.data.title}</a>
+              </h4>
+              <p class="text-gray-600 dark:text-gray-400 mb-4">{article.data.excerpt}</p>
+              <div class="flex items-center">
+                  <img src='https://art-evolves-content-drop.s3.us-east-1.amazonaws.com/art-evolves-marketing/art-evolves-logo.webp' alt={article.data.author} class="w-8 h-8 rounded-full mr-2" />
+                <span class="text-sm text-gray-700 dark:text-gray-300">{article.data.author}</span>
+              </div>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p> articles found.</p>
+      )}
+    </div>
+  </div>
+</WidgetWrapper>

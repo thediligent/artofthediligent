@@ -1,0 +1,28 @@
+---
+interface Props {
+  images: { src: string; alt?: string; width?: number; height?: number }[];
+}
+
+const { images } = Astro.props;
+---
+
+<div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+  {images.map((img, index) => (
+    <div class="grid gap-4">
+      {Array.from({ length: Math.ceil(images.length / 4) }, (_, i) => (
+        index === i * 4 || index === i * 4 + 1 || index === i * 4 + 2 ? (
+          <div>
+            <img
+              class="h-auto max-w-full rounded-lg object-cover object-center"
+              src={img.src}
+              alt={img.alt || `gallery-photo-${index}`}
+              width={img.width || 800} // Fallback width
+              height={img.height || 600} // Fallback height
+              loading="lazy"
+            />
+          </div>
+        ) : null
+      ))}
+    </div>
+  ))}
+</div>

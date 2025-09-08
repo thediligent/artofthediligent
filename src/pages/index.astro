@@ -1,0 +1,397 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import { getCollection } from 'astro:content';
+import { cleanSlug, getPermalink } from '~/utils/permalinks';
+
+import EditorsPicks from '~/components/widgets/EditorsPicks.astro';
+
+import magazineCover from '~/assets/images/magazine-cover.webp';
+import featuredSpot from '~/assets/images/art-evolves.webp';
+import fashionEditorial from '~/assets/images/fashion-ai-articles.webp';
+import cultureEditorial from '~/assets/images/culture-ai-articles.webp';
+import fashionImage from '~/assets/images/fashion.webp';
+import cultureImage from '~/assets/images/culture.webp';
+import newsImage from '~/assets/images/news.webp';
+import musicImage from '~/assets/images/music.webp';
+import architectureImage from '~/assets/images/architecture.webp';
+import artImage from '~/assets/images/art.webp';
+import artistPrintsImage from '~/assets/images/artofthediligent-prints.webp';
+import butterflyBgImage from '~/assets/images/butterflybg.webp';
+
+import artofthediligent from '~/assets/images/artofthediligent.webp';
+import derekImage from '~/assets/images/derek.webp';
+import voltageImage from '~/assets/images/voltage.webp';
+import jairoImage from '~/assets/images/jairo.webp';
+
+import shopJournalsImage from '~/assets/images/journals.webp';
+import shopBooksImage from '~/assets/images/books.webp';
+import shopApparelImage from '~/assets/images/apparel.webp';
+import shopPosterImage from '~/assets/images/posters.webp';
+import shopAccessoriesImage from '~/assets/images/accessories.webp';
+import shopMousepadsImage from '~/assets/images/mousepads.webp';
+
+import CardGrid from '~/components/ui/cardGrid.astro';
+import ProductGrid from '~/components/ui/productGrid.astro';
+import CardGrid2 from '~/components/ui/cardGrid2.astro';
+import ShopCollections from '~/components/ui/ShopCollections.astro';
+import HeroVideo from '~/components/widgets/Hero4-video.astro';
+import Features2 from '~/components/widgets/Features2.astro';
+import Steps from '~/components/widgets/Steps.astro';
+import Content from '~/components/widgets/Content.astro';
+import Content2 from '~/components/widgets/Content2.astro';
+import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import Stats from '~/components/widgets/Stats.astro';
+
+import Button from '~/components/ui/Button.astro';
+import Image from '~/components/common/Image.astro';
+
+const appStoreImg = '~/assets/images/app-store.png';
+const appStoreDownloadLink = 'https://github.com/onwidget/astrowind';
+
+const googlePlayImg = '~/assets/images/google-play.png';
+const googlePlayDownloadLink = 'https://github.com/onwidget/astrowind';
+
+const articles = await getCollection('articles');
+const products = await getCollection('products');
+
+const featuredMagazine = articles.find(
+  (article) => article.data.category === 'Magazine Issues' && article.data.featured
+);
+const editorsPicks = articles.filter((article) => article.data.featured).slice(0, 3);
+const featuredArtists = articles.filter((article) => article.data.category === 'Featured Artists').slice(0, 3);
+const shopCollections = [...new Set(products.map((product) => product.data.collection))];
+const mostRead = articles.sort((a, b) => b.data.date - a.data.date).slice(0, 3);
+
+const metadata = {
+  title: 'Art Of The Diligent — Free template for creating websites with Astro + Tailwind CSS',
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <header class="py-0">
+    <div
+      class="w-full h-[600px] bg-center bg-cover bg-no-repeat"
+      style='background-image: url("https://main.d3cz6hzvf33iri.amplifyapp.com/wp-content/uploads/2024/05/new-moon-goddess-mucha-art-of-the-diligent.jpg");'
+    >
+      <div class="flex items-center justify-center w-full h-full bg-gray-900 bg-opacity-50 py-28">
+        <div class="text-center">
+          <div class="container px-4 mx-auto">
+            <div class="max-w-4xl mx-auto text-center">
+              <span class="text-gray-200 font-semibold uppercase st">ART OF THE DILIGENT</span>
+              <h2 class="mt-8 mb-6 text-5xl lg:text-7xl font-bold font-heading text-gray-100">
+                Posters and Fine Art Prints
+              </h2>
+              <p class="max-w-3xl mx-auto mb-10 text-lg text-gray-300">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laborum sit cum iure qui, nostrum at sapiente
+                ducimus.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Shop Collections Widget ************** -->
+  <div class="my-4">
+    <div class="text-center pt-10 mb-0">
+      <h2 class="font-black dark:text-white text-5xl lg:text-5xl mb-4 font-heading uppercase">Shop Your Style</h2>
+      <p class="text-lg text-gray-600 dark:text-gray-400">
+        Each season, we collaborate with world-class designers to create a collection inspired by the natural world.
+      </p>
+    </div>
+
+    <ShopCollections
+      collections={[
+        {
+          title: 'Apparel',
+          url: '/shop/apparel',
+          image: 'https://art-evolves-content-drop.s3.us-east-1.amazonaws.com/products/apparel/apparel-category.webp',
+          alt: 'Apparel collection',
+        },
+        {
+          title: 'Posters',
+          url: '/shop/posters',
+          image: 'https://art-evolves-content-drop.s3.us-east-1.amazonaws.com/products/posters/poster-category.webp',
+          alt: 'Posters collection',
+        },
+        {
+          title: 'Journals',
+          url: '/shop/journals',
+          image: 'https://art-evolves-content-drop.s3.us-east-1.amazonaws.com/products/journals/journals-category.webp',
+          alt: 'Journals collection',
+        },
+        {
+          title: 'Books',
+          url: '/shop/books',
+          image: 'https://art-evolves-content-drop.s3.us-east-1.amazonaws.com/products/books/books-category.webp',
+          alt: 'Books collection',
+        },
+        {
+          title: 'Mousepads',
+          url: '/shop/mousepads',
+          image: shopMousepadsImage,
+          alt: 'Mousepads collection',
+        },
+        {
+          title: 'Mugs',
+          url: '/shop/mugs',
+          image: shopAccessoriesImage,
+          alt: 'Mugs collection',
+        },
+      ]}
+    />
+  </div>
+
+  <!-- CardGrid2 Widget ************** -->
+  <div class="text-center pt-8 mb-0">
+    <h2 class="font-black dark:text-white text-5xl lg:text-5xl mb-4 font-heading uppercase">Featured Artwork</h2>
+    <p class="text-lg text-gray-600 dark:text-gray-400 pb-6">
+      Each season, we collaborate with world-class designers to create a collection inspired by the natural world.
+    </p>
+  </div>
+  <ProductGrid
+    products={[
+      {
+        title: 'Butterfly Princess',
+        url: '/products/the-butterfly-princess',
+        image: artofthediligent,
+        alt: 'Art of the Diligent',
+        price: '21.99',
+        size: '11x17',
+      },
+      {
+        title: 'Sunlit Shores',
+        url: '/',
+        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_24x18_framed-canvas-hero_walnut_float/prod/artwork/DNA/0HY/MIN-0HY-DNA_A_CANVAS_MUSEUM.jpg?_TH?mntd_prf=Category:ProductImage_0',
+        alt: 'By Rachel Nelson',
+        price: '',
+      },
+     {
+        title: 'Butterfly Princess',
+        url: '/products/the-butterfly-princess',
+        image: artofthediligent,
+        alt: 'Art of the Diligent',
+        price: '21.99',
+        size: '11x17',
+      },
+      {
+        title: 'Butterfly Princess',
+        url: '/products/the-butterfly-princess',
+        image: artofthediligent,
+        alt: 'Art of the Diligent',
+        price: '21.99',
+        size: '11x17',
+      },
+    ]}
+    colsSm={2}
+    colsMd={3}
+    colsLg={3}
+  />
+
+  <section class="py-12">
+    <div
+      class="w-full h-[600px] bg-center bg-cover bg-no-repeat"
+      style='background-image: url("https://s3.us-east-1.amazonaws.com/artofthediligent.com/testArt/diligentmarketingsolutions_A_tarot_card_portrait_of_Teyonah_Par_8e49e883-d330-419f-ae4c-5b4282f3a631.webp");'
+    >
+      <div class="flex items-center justify-center w-full h-full bg-gray-900 bg-opacity-50 py-28">
+        <div class="text-center">
+          <div class="container px-4 mx-auto">
+            <div class="max-w-4xl mx-auto text-center">
+             <span class="text-gray-200 font-semibold uppercase st">THOUGHTS</span>
+              <h2 class="mt-8 mb-6 text-5xl lg:text-7xl font-bold font-heading text-gray-100">
+                Artist Musings
+              </h2>
+              <p class="max-w-3xl mx-auto mb-10 text-lg text-gray-300">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laborum sit cum iure qui, nostrum at sapiente
+                ducimus.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Artists Writings -->
+  <section class="my-3 py-0 px-4 lg:px-6">
+    <!-- CardGrid Widget ************** -->
+    <CardGrid2
+      categories={[
+        {
+          title: 'Fashion',
+          url: '/fashion',
+          image: fashionImage,
+          alt: 'Fashion category',
+        },
+        {
+          title: 'News',
+          url: '/news',
+          image: newsImage,
+          alt: 'News category',
+        },
+        {
+          title: 'Culture',
+          url: '/culture',
+          image: cultureImage,
+          alt: 'Culture category',
+        },
+        {
+          title: 'Music',
+          url: '/music',
+          image: musicImage,
+          alt: 'Music category',
+        },
+        {
+          title: 'Art',
+          url: '/art',
+          image: artImage,
+          alt: 'Art category',
+        },
+        {
+          title: 'Architecture',
+          url: '/architecture',
+          image: architectureImage,
+          alt: 'Architecture category',
+        },
+      ]},
+      colsSm={2}
+      colsMd={3}
+      colsLg={6}
+    />
+    <div class="mt-5 py-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+      {
+        featuredArtists.map((article) => (
+          <a href={getPermalink(cleanSlug(article.data.category) + '/' + cleanSlug(article.data.title))} class="block">
+            <img src={article.data.image} alt={article.data.title} class="w-full h-48 object-cover rounded" />
+            <h3 class="text-xl font-semibold mt-4">{article.data.title}</h3>
+            <p class="text-gray-600">{article.data.excerpt}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+<div class="text-center pt-10 mb-0">
+    <h2 class="font-black dark:text-white text-5xl lg:text-5xl mb-4 font-heading uppercase">Recent Work</h2>
+    <p class="text-lg text-gray-600 dark:text-gray-400 pb-6">
+      Each season, we collaborate with world-class designers to create a collection inspired by the natural world.
+    </p>
+  </div>
+    <ProductGrid
+    products={[
+      {
+        title: 'Sunlit Shores',
+        url: '/',
+        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_24x18_framed-canvas-hero_walnut_float/prod/artwork/DNA/0HY/MIN-0HY-DNA_A_CANVAS_MUSEUM.jpg?_TH?mntd_prf=Category:ProductImage_0',
+        alt: 'By Rachel Nelson',
+        price: '',
+      },
+      {
+        title: 'Lemonade Stand',
+        url: '/',
+        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_18x24_framed-canvas-hero_natural_float/prod/artwork/DNA/SCV/MIN-SCV-DNA_A_CANVAS_MUSEUM.jpg?_TH?mntd_prf=Category:ProductImage_1',
+        alt: 'By Marie Stone',
+        price: '',
+      },
+      {
+        title: 'Game Time',
+        url: '/',
+        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_24x18_white_hero/prod/artwork/DNA/218/MIN-218-DNA_A_FLT.jpg?_TH?mntd_prf=Category:ProductImage_2',
+        alt: 'By Lindseyerin',
+        price: '',
+      },
+      {
+        title: 'The Beauty Within',
+        url: '/',
+        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_18x24_natural_hero/prod/artwork/DNA/34G/MIN-34G-DNA_A_FLT.jpg?_TH?mntd_prf=Category:ProductImage_3',
+        alt: 'By Paola Benenati',
+        price: '',
+      },
+      {
+        title: 'L.a I Love You',
+        url: '/',
+        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_24x18_walnut_hero/prod/artwork/DNA/JBT/MIN-JBT-DNA_A_FLT.jpg?_TH?mntd_prf=Category:ProductImage_4',
+        alt: 'By Chelsea Victoria',
+        price: '',
+      },
+      {
+        title: 'Flowing Dusk',
+        url: '/',
+        image: 'https://lonefox.com/cdn/shop/files/monumental-still-life-with-fruits-and-flowers-by-georges-wesche-belgium-1960s-9308275_600x.jpg?v=1751872995',
+        alt: 'By Em Hale',
+        price: '',
+      },
+      {
+        title: 'Pieces Of The Sky',
+        url: '/',
+        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_18x24_framed-canvas-hero_black_float/prod/artwork/DNA/II9/MIN-II9-DNA_A_CANVAS_GALLERY.jpg?_TH?',
+        alt: 'By Ella Frödin',
+        price: '',
+      },
+      {
+        title: 'Fire Flower',
+        url: '/',
+        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_24x24_framed-canvas-hero_walnut_float/prod/artwork/DNA/C16/MIN-C16-DNA_A_CANVAS_GALLERY.jpg?_TH?',
+        alt: 'By Synnöve Seidman',
+        price: '',
+      },
+      {
+        title: 'Famous Food Blue',
+        url: '/',
+        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_18x24_walnut_hero/prod/artwork/DNA/MAU/MIN-MAU-DNA_A_FLT.jpg?_TH?',
+        alt: 'By Andrew Mcclintock',
+        price: '',
+      },
+      {
+        title: 'Famous Food Black',
+        url: 'https://www.minted.com/product/art/MIN-NNO-DNA/famous-food-black?color=A&greeting=&shape=&art_group=art_print',
+        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_18x24_walnut_hero/prod/artwork/DNA/NNO/MIN-NNO-DNA_A_FLT.jpg?_TH?',
+        alt: 'By Andrew Mcclintock',
+        price: '',
+      },
+      {
+        title: 'Mr Bings Cocktail Lounge',
+        url: 'https://www.minted.com/product/art/MIN-S9X-DNA/mr-bings-cocktail-lounge?color=A&greeting=&shape=&art_group=art_print',
+        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_24x24_black_hero/prod/artwork/DNA/S9X/MIN-S9X-DNA_A_FBL.jpg?_TH?',
+        alt: 'By Austin Warnock',
+        price: '',
+      },
+      {
+        title: 'Cotton Candy Dreams',
+        url: 'https://www.minted.com/product/art/MIN-6V9-DNA/cotton-candy-dreams?color=A&greeting=&shape=&art_group=canvas',
+        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_18x24_framed-canvas-hero_white_float/prod/artwork/DNA/6V9/MIN-6V9-DNA_A_CANVAS_GALLERY.jpg?_TH?',
+        alt: 'By Elizabeth Ulrich',
+        price: '',
+      },
+      {
+        title: 'Checkers 1',
+        url: 'https://www.minted.com/product/art/MIN-1GP-DNA/checkers-1?color=A&greeting=&shape=&art_group=canvas',
+        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_24x24_framed-canvas-hero_natural_float/prod/artwork/DNA/1GP/MIN-1GP-DNA_A_CANVAS_GALLERY.jpg?_TH?',
+        alt: 'By Lindsay Megahed',
+        price: '',
+      },
+      {
+        title: 'Checkers 2',
+        url: 'https://www.minted.com/product/art/MIN-TQP-DNA/checkers-2?color=A&greeting=&shape=&art_group=canvas',
+        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_24x24_framed-canvas-hero_natural_float/prod/artwork/DNA/TQP/MIN-TQP-DNA_A_CANVAS_GALLERY.jpg?_TH?',
+        alt: 'By Lindsay Megahed',
+        price: '',
+      },
+    ]}
+    colsSm={2}
+    colsMd={3}
+    colsLg={3}
+  />
+  </div>
+  <!-- Newsletter Signup -->
+  <section class="py-16 text-center bg-primary text-white">
+    <h2 class="text-3xl font-bold mb-4">Stay Informed</h2>
+    <p class="text-lg mb-8">Get exclusive art insights and updates.</p>
+    <form class="flex justify-center gap-4">
+      <input type="email" placeholder="Enter your email" class="p-2 rounded text-black w-64" />
+      <button type="submit" class="bg-black text-primary-500 px-6 py-2 rounded hover:bg-gray-200">Subscribe</button>
+    </form>
+  </section>
+</Layout>

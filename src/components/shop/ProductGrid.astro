@@ -1,0 +1,19 @@
+--- 
+const products = [
+  { name: "Nomad Pouch", variant: "White and Black", price: "$50", image: "https://art-evolves-content-drop.s3.us-east-1.amazonaws.com/products/mugs/mug-category.webp" },
+  { name: "Zip Tote Basket", variant: "Washed Black", price: "$140", image: "https://art-evolves-content-drop.s3.us-east-1.amazonaws.com/products/posters/poster-category.webp" },
+  // Add more products as needed
+];
+---
+<div class="w-full p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+  {products.map(product => (
+    <a href="#" class="group">
+      <div class="w-full h-64 rounded-lg overflow-hidden">
+        <img src={product.image} alt={product.name} class="w-full h-full object-cover group-hover:opacity-75 transition-opacity duration-300" />
+      </div>
+      <h3 class="text-gray-900 dark:text-gray-200 text-lg font-medium mt-2">{product.name}</h3>
+      <p class="text-sm text-gray-500">{product.variant}</p>
+      <p class="text-gray-900 dark:text-gray-200 text text-lg font-semibold">{product.price}</p>
+    </a>
+  ))}
+</div>

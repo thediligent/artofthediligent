@@ -1,0 +1,46 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import { getCollection } from 'astro:content';
+import { cleanSlug, getPermalink } from '~/utils/permalinks';
+
+export const getStaticPaths = async () => {
+  const articles = await getCollection('articles');
+  const categories = [...new Set(articles.map((article) => cleanSlug(article.data.category)))];
+  console.log('Generated Categories:', categories); // Debug output
+  return categories.map((category) => ({
+    params: { category },
+  }));
+};
+
+export const prerender = true;
+
+const category = Astro.params.category;
+const articles = await getCollection('articles', ({ data }) => cleanSlug(data.category) === category);
+
+const metadata = {
+  title: `${category.charAt(0).toUpperCase() + category.slice(1)} | Art Of The Diligent`,
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <h1 class="text-4xl font-bold mb-8">{category.charAt(0).toUpperCase() + category.slice(1)}</h1>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {articles.map((article) => (
+        <a href={getPermalink(`${cleanSlug(article.data.category)}/${cleanSlug(article.data.title)}`)} class="block shadow-md rounded-lg overflow-hidden">
+          <img src={article.data.image} alt={article.data.title} class="w-full h-48 object-cover" />
+          <div class="p-4">
+            <h2 class="text-xl font-semibold mt-2">{article.data.title}</h2>
+            <p class="mt-2 line-clamp-2">{article.data.excerpt}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+    <div class="md:col-span-1 hidden md:block">
+      <div class="bg-gray-200 p-6 rounded-lg h-64 flex items-center justify-center">
+        <p class="text-gray-500">AdSense/Ad Spot Placeholder</p>
+      </div>
+    </div>
+    {articles.length === 0 && <p class="text-gray-500">No articles in this category yet.</p>}
+  </section>
+</Layout>

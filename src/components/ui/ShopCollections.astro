@@ -1,0 +1,129 @@
+---
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  collections: {
+    title: string;
+    url: string;
+    image: string | ImageMetadata;
+    alt?: string;
+  }[];
+}
+
+const { collections } = Astro.props;
+---
+
+<div class="relative mx-auto px-4 py-8">
+  <div class="swiper shop-collections-swiper">
+    <div class="swiper-wrapper">
+      {
+        collections.map((collection) => (
+          <div class="swiper-slide">
+            <a href={collection.url} class="block">
+              <div class="relative group overflow-hidden rounded-lg">
+                <img
+                  src={typeof collection.image === 'string' ? collection.image : collection.image.src}
+                  alt={collection.alt || collection.title}
+                  class="w-full h-96 object-cover transition-transform duration-300 group-hover:scale-110"
+                />
+                <div class="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-40 transition-opacity duration-300 flex items-end">
+                  <h3 class="text-white text-xl font-semibold p-6 w-full bg-gradient-to-t from-black/60 to-transparent upperase track-wide">
+                    {collection.title}
+                  </h3>
+                </div>
+              </div>
+            </a>
+          </div>
+        ))
+      }
+    </div>
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+  </div>
+</div>
+
+<script>
+  import Swiper from 'swiper';
+  import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+
+  function initSwiper() {
+    const swiperElement = document.querySelector('.shop-collections-swiper');
+    if (!swiperElement) return;
+
+    // Destroy existing swiper instance if it exists
+    // @ts-expect-error Swiper instance may exist
+    if (swiperElement.swiper) {
+      // @ts-expect-error Destroy existing Swiper instance
+      swiperElement.swiper.destroy(true, true);
+    }
+
+    // Initialize new Swiper instance
+    new Swiper('.shop-collections-swiper', {
+    modules: [Navigation, Pagination, Autoplay],
+    slidesPerView: 1,
+    spaceBetween: 24,
+    loop: true,
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    breakpoints: {
+      640: {
+        slidesPerView: 2,
+      },
+      1024: {
+        slidesPerView: 4,
+      },
+    },
+    });
+  }
+
+  // Initialize on page load and when navigating back
+  document.addEventListener('astro:page-load', initSwiper);
+</script>
+
+<style>
+  .swiper {
+    padding: 2rem 1rem;
+  }
+  
+  :global(.swiper-button-next),
+  :global(.swiper-button-prev) {
+    color: theme('colors.gray.800');
+    background-color: theme('colors.white');
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    &::after {
+      font-size: 1.2rem;
+    }
+  }
+
+  :global(.swiper-pagination-bullet) {
+    background-color: theme('colors.gray.800');
+  }
+
+  :global(.dark) {
+    .swiper-button-next,
+    .swiper-button-prev {
+      color: theme('colors.gray.200');
+      background-color: theme('colors.gray.800');
+    }
+    .swiper-pagination-bullet {
+      background-color: theme('colors.gray.200');
+    }
+  }
+</style>

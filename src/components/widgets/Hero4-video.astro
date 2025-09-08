@@ -1,0 +1,72 @@
+---
+
+---
+
+<style>
+  .video-docker iframe {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%);
+  }
+
+  .video-docker::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.70);
+    z-index: 1;
+  }
+  .video-content {
+    position: absolute;
+    transform: translate(0, 25%);
+  }
+
+  /* Additional styles for responsive iframe */
+  .video-docker {
+    position: relative;
+    padding-bottom: 50%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    margin-top: 1rem;
+  }
+
+  .video-docker iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 280%;
+    height: 280%;
+  }
+  @media screen and (min-width: 992px) {
+    .video-content {
+      position: absolute;
+      transform: translate(0, -23%);
+    }
+    .video-docker iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+</style>
+
+<section class="relative flex flex-col items-center lg:justify-center text-center text-white">
+  <div class="video-docker absolute top-0 left-0 w-full h-full overflow-hidden">
+    <iframe
+      class="min-w-full min-h-full absolute"
+      src="https://www.youtube.com/embed/Ww10KOR2DIw?autoplay=1&mute=1&loop=1&&controls=0&showinfo=0&rel=0"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen></iframe>
+  </div>
+  <div class="video-content space-y-2 z-10 p-6">
+    <h1 class="font-bold text-3xl sm:text-5xl md:text-7xl font-heading tracking-wide">Your Curated Source for Ai Inspiration & News</h1>
+    <h3 class="font-light text-2xl md:text-3xl">Celebrate the mesmerizing world of AI-powered art and culture.</h3>
+  </div>
+</section>

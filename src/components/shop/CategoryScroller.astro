@@ -1,0 +1,19 @@
+--- 
+const categoryImages = [
+  { name: "Posters", image: "https://placehold.co/400x400" },
+  { name: "Journals", image: "https://placehold.co/400x400" },
+  { name: "Shirts", image: "https://placehold.co/400x400" },
+  { name: "Mugs", image: "https://placehold.co/400x400" },
+  { name: "Artwork", image: "https://placehold.co/400x400" },
+  { name: "Books", image: "https://placehold.co/400x400" },
+  // Add more category images
+];
+---
+<div class="md:hidden overflow-x-auto whitespace-nowrap pb-4">
+  {categoryImages.map(cat => (
+    <div class="inline-block px-2">
+      <img src={cat.image} alt={cat.name} class="w-24 h-24 object-cover rounded-md" />
+      <p class="text-center text-sm mt-1">{cat.name}</p>
+    </div>
+  ))}
+</div>
