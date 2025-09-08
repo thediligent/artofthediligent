@@ -19,6 +19,45 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 
-pnpm-lock.yaml
+# Windows-specific files
+Thumbs.db
+
+# more build outputs
+/build
+/.next
+/.nuxt
+/.vercel
+/.netlify
+
+# Dependency directories
+jspm_packages/
+
+# Coverage
+coverage/
+
+# Static files
+public/static
+
+# Editor folders
+.vscode/
+.idea/
+
+# Misc
+*.tgz
+*.zip
+*.tar
+*.swp
+*.swo
+
+# TypeScript
+*.tsbuildinfo
+
+# Svelte
+.svelte-kit
+
+# Ignore lock files if needed
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
 
 .astro
