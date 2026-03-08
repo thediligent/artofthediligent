@@ -57,8 +57,8 @@ export default {
         },
         // Base colors
         primary: {
-          DEFAULT: '#AE1416',
-          dark: '#AE1416',
+          DEFAULT: '#616161',
+          dark: '#616161',
         },
         secondary: {
           DEFAULT: '#AE1416',

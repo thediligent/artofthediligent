@@ -29,9 +29,10 @@ const { collections } = Astro.props;
                   src={typeof collection.image === 'string' ? collection.image : collection.image.src}
                   alt={collection.alt || collection.title}
                   class="w-full h-96 object-cover transition-transform duration-300 group-hover:scale-110"
+                  loading="eager"
                 />
                 <div class="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-40 transition-opacity duration-300 flex items-end">
-                  <h3 class="text-white text-xl font-semibold p-6 w-full bg-gradient-to-t from-black/60 to-transparent upperase track-wide">
+                  <h3 class="text-white text-xl font-semibold p-6 w-full bg-gradient-to-t from-black/60 to-transparent uppercase tracking-wide">
                     {collection.title}
                   </h3>
                 </div>
@@ -53,7 +54,10 @@ const { collections } = Astro.props;
 
   function initSwiper() {
     const swiperElement = document.querySelector('.shop-collections-swiper');
-    if (!swiperElement) return;
+    if (!swiperElement) {
+      console.log('Swiper element not found');
+      return;
+    }
 
     // Destroy existing swiper instance if it exists
     // @ts-expect-error Swiper instance may exist
@@ -63,35 +67,45 @@ const { collections } = Astro.props;
     }
 
     // Initialize new Swiper instance
-    new Swiper('.shop-collections-swiper', {
-    modules: [Navigation, Pagination, Autoplay],
-    slidesPerView: 1,
-    spaceBetween: 24,
-    loop: true,
-    autoplay: {
-      delay: 5000,
-      disableOnInteraction: false,
-    },
-    pagination: {
-      el: '.swiper-pagination',
-      clickable: true,
-    },
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-    breakpoints: {
-      640: {
-        slidesPerView: 2,
+    const swiper = new Swiper('.shop-collections-swiper', {
+      modules: [Navigation, Pagination, Autoplay],
+      slidesPerView: 1,
+      spaceBetween: 24,
+      loop: true,
+      autoplay: {
+        delay: 5000,
+        disableOnInteraction: false,
       },
-      1024: {
-        slidesPerView: 4,
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
       },
-    },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      breakpoints: {
+        640: {
+          slidesPerView: 2,
+        },
+        1024: {
+          slidesPerView: 4,
+        },
+      },
     });
+
+    console.log('Swiper initialized:', swiper);
   }
 
-  // Initialize on page load and when navigating back
+  // Initialize on DOMContentLoaded for first load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSwiper);
+  } else {
+    // DOM already loaded
+    initSwiper();
+  }
+
+  // Also initialize on astro:page-load for view transitions
   document.addEventListener('astro:page-load', initSwiper);
 </script>
 
@@ -102,28 +116,29 @@ const { collections } = Astro.props;
   
   :global(.swiper-button-next),
   :global(.swiper-button-prev) {
-    color: theme('colors.gray.800');
-    background-color: theme('colors.white');
+    color: #1f2937;
+    background-color: #ffffff;
     border-radius: 50%;
     width: 3rem;
     height: 3rem;
-    &::after {
-      font-size: 1.2rem;
-    }
+  }
+
+  :global(.swiper-button-next::after),
+  :global(.swiper-button-prev::after) {
+    font-size: 1.2rem;
   }
 
   :global(.swiper-pagination-bullet) {
-    background-color: theme('colors.gray.800');
+    background-color: #1f2937;
   }
 
-  :global(.dark) {
-    .swiper-button-next,
-    .swiper-button-prev {
-      color: theme('colors.gray.200');
-      background-color: theme('colors.gray.800');
-    }
-    .swiper-pagination-bullet {
-      background-color: theme('colors.gray.200');
-    }
+  :global(.dark .swiper-button-next),
+  :global(.dark .swiper-button-prev) {
+    color: #e5e7eb;
+    background-color: #1f2937;
+  }
+
+  :global(.dark .swiper-pagination-bullet) {
+    background-color: #e5e7eb;
   }
 </style>

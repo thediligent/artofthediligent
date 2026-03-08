@@ -1,19 +1,122 @@
---- 
-const products = [
-  { name: "Nomad Pouch", variant: "White and Black", price: "$50", image: "https://art-evolves-content-drop.s3.us-east-1.amazonaws.com/products/mugs/mug-category.webp" },
-  { name: "Zip Tote Basket", variant: "Washed Black", price: "$140", image: "https://art-evolves-content-drop.s3.us-east-1.amazonaws.com/products/posters/poster-category.webp" },
-  // Add more products as needed
-];
 ---
-<div class="w-full p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-  {products.map(product => (
-    <a href="#" class="group">
-      <div class="w-full h-64 rounded-lg overflow-hidden">
-        <img src={product.image} alt={product.name} class="w-full h-full object-cover group-hover:opacity-75 transition-opacity duration-300" />
-      </div>
-      <h3 class="text-gray-900 dark:text-gray-200 text-lg font-medium mt-2">{product.name}</h3>
-      <p class="text-sm text-gray-500">{product.variant}</p>
-      <p class="text-gray-900 dark:text-gray-200 text text-lg font-semibold">{product.price}</p>
-    </a>
-  ))}
+import { fetchProducts, filterProducts, sortProducts, type ProductFilter, type ProductSort } from '~/utils/products';
+import { cleanSlug } from '~/utils/permalinks';
+
+export interface Props {
+  limit?: number;
+  filter?: ProductFilter;
+  sort?: ProductSort;
+}
+
+const { limit, filter, sort } = Astro.props;
+
+// Fetch and filter products
+let products = await fetchProducts();
+
+if (filter) {
+  products = filterProducts(products, filter);
+}
+
+if (sort) {
+  products = sortProducts(products, sort);
+}
+
+if (limit) {
+  products = products.slice(0, limit);
+}
+
+// Get current price for display
+const getDisplayPrice = (product: typeof products[0]) => {
+  return product.data.onSale && product.data.salePrice
+    ? product.data.salePrice
+    : product.data.price;
+};
+---
+
+<div class="w-full p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+  {products.length === 0 && (
+    <div class="col-span-full text-center py-12">
+      <p class="text-gray-600 dark:text-gray-400 text-lg">No products found matching your criteria.</p>
+    </div>
+  )}
+  
+  {products.map((product) => {
+    const productSlug = cleanSlug(product.data.title);
+    const displayPrice = getDisplayPrice(product);
+    
+    return (
+      <a href={`/products/${productSlug}`} class="group">
+        <div class="relative w-full aspect-square rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+          <img 
+            src={product.data.image} 
+            alt={product.data.title} 
+            class="w-full h-full object-cover object-center group-hover:opacity-75 transition-opacity duration-300" 
+          />
+          
+          {/* Sale Badge */}
+          {product.data.onSale && product.data.salePercent && (
+            <div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+              -{product.data.salePercent}%
+            </div>
+          )}
+          
+          {/* Featured Badge */}
+          {product.data.featured && !product.data.onSale && (
+            <div class="absolute top-2 right-2 bg-indigo-500 text-white text-xs font-bold px-2 py-1 rounded">
+              FEATURED
+            </div>
+          )}
+        </div>
+        
+        <div class="mt-4">
+          <h3 class="text-gray-900 dark:text-gray-200 text-lg font-medium group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+            {product.data.title}
+          </h3>
+          
+          {/* Collection/Category */}
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            {product.data.collection}
+          </p>
+          
+          {/* Price */}
+          <div class="mt-2 flex items-center gap-2">
+            {product.data.onSale && product.data.salePrice ? (
+              <>
+                <p class="text-red-600 dark:text-red-400 text-lg font-semibold">
+                  ${product.data.salePrice}
+                </p>
+                <p class="text-gray-500 dark:text-gray-400 text-sm line-through">
+                  ${product.data.price}
+                </p>
+              </>
+            ) : (
+              <p class="text-gray-900 dark:text-gray-200 text-lg font-semibold">
+                ${product.data.price}
+              </p>
+            )}
+          </div>
+          
+          {/* Rating */}
+          {product.data.rating && (
+            <div class="mt-2 flex items-center">
+              <div class="flex items-center">
+                {[...Array(5)].map((_, i) => (
+                  <svg
+                    class={`h-4 w-4 ${i < Math.floor(product.data.rating || 0) ? 'text-yellow-400' : 'text-gray-200 dark:text-gray-600'}`}
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              {product.data.reviewCount && (
+                <span class="ml-2 text-xs text-gray-500 dark:text-gray-400">({product.data.reviewCount})</span>
+              )}
+            </div>
+          )}
+        </div>
+      </a>
+    );
+  })}
 </div>

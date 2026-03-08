@@ -1,0 +1,199 @@
+---
+// EXAMPLE: Using the shop components on your homepage or any page
+// This file demonstrates different ways to use the shop system components
+
+import Layout from '~/layouts/PageLayout.astro';
+import FeaturedProducts from '~/components/shop/FeaturedProducts.astro';
+import SaleProducts from '~/components/shop/SaleProducts.astro';
+import ProductGrid from '~/components/shop/ProductGrid.astro';
+import { getProductsByCollection, getFeaturedProducts } from '~/utils/products';
+
+// Example: Get specific products for custom sections
+const mugs = await getProductsByCollection('Mugs', 4);
+const featuredPosters = await getFeaturedProducts(6);
+
+const metadata = {
+  title: 'Shop Example Page',
+};
+---
+
+<Layout metadata={metadata}>
+  <!-- Example 1: Featured Products Section -->
+  <section class="py-12">
+    <div class="container mx-auto">
+      <FeaturedProducts 
+        limit={8}
+        columns={4}
+        title="Staff Picks"
+        subtitle="Hand-selected favorites from our team"
+      />
+    </div>
+  </section>
+
+  <!-- Example 2: Sale Section -->
+  <SaleProducts 
+    limit={4}
+    columns={4}
+    title="Limited Time Offers"
+    subtitle="Save big on these items - while stocks last!"
+  />
+
+  <!-- Example 3: Collection-specific Featured Products -->
+  <section class="py-12 bg-gray-50 dark:bg-gray-900">
+    <div class="container mx-auto">
+      <FeaturedProducts 
+        collection="Posters"
+        limit={6}
+        columns={3}
+        title="Featured Posters"
+        subtitle="Gallery-quality art prints"
+        showAddToCart={true}
+      />
+    </div>
+  </section>
+
+  <!-- Example 4: Custom Product Grid with Filters -->
+  <section class="py-12">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-8">New Arrivals</h2>
+      
+      <ProductGrid 
+        limit={12}
+        filter={{ featured: true, inStock: true }}
+        sort={{ field: 'price', order: 'asc' }}
+      />
+    </div>
+  </section>
+
+  <!-- Example 5: On Sale Items Only -->
+  <section class="py-12">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-8 text-red-600">Flash Sale</h2>
+      
+      <ProductGrid 
+        filter={{ onSale: true }}
+        sort={{ field: 'price', order: 'desc' }}
+      />
+    </div>
+  </section>
+
+  <!-- Example 6: Price Range Products -->
+  <section class="py-12 bg-gray-50 dark:bg-gray-900">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-8">Under $50</h2>
+      
+      <ProductGrid 
+        limit={8}
+        filter={{ maxPrice: 50, inStock: true }}
+        sort={{ field: 'price', order: 'asc' }}
+      />
+    </div>
+  </section>
+
+  <!-- Example 7: Using fetched data for custom layout -->
+  <section class="py-12">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-8">Mug Collection</h2>
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        {mugs.map((product) => (
+          <a href={`/products/${product.slug}`} class="group">
+            <img 
+              src={product.data.image} 
+              alt={product.data.title}
+              class="rounded-lg group-hover:opacity-75 transition-opacity"
+            />
+            <h3 class="mt-2 font-medium">{product.data.title}</h3>
+            <p class="text-gray-600 dark:text-gray-400">${product.data.price}</p>
+          </a>
+        ))}
+      </div>
+      
+      <div class="mt-8 text-center">
+        <a 
+          href="/shop/mugs" 
+          class="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700"
+        >
+          View All Mugs
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Example 8: Category Preview Sections -->
+  <section class="py-12">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-8 text-center">Shop by Category</h2>
+      
+      <!-- Apparel -->
+      <div class="mb-12">
+        <h3 class="text-2xl font-semibold mb-4">Apparel</h3>
+        <ProductGrid 
+          limit={4}
+          filter={{ collection: 'Apparel' }}
+          sort={{ field: 'featured', order: 'desc' }}
+        />
+        <a href="/shop/apparel" class="text-indigo-600 hover:underline">View all apparel →</a>
+      </div>
+      
+      <!-- Posters -->
+      <div class="mb-12">
+        <h3 class="text-2xl font-semibold mb-4">Posters</h3>
+        <ProductGrid 
+          limit={4}
+          filter={{ collection: 'Posters' }}
+          sort={{ field: 'featured', order: 'desc' }}
+        />
+        <a href="/shop/posters" class="text-indigo-600 hover:underline">View all posters →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Example 9: Without Add to Cart Buttons -->
+  <FeaturedProducts 
+    showAddToCart={false}
+    limit={6}
+    columns={3}
+    title="Browse Our Collection"
+    subtitle="Click any item to view details"
+  />
+</Layout>
+
+<!--
+  QUICK REFERENCE:
+  
+  FeaturedProducts Props:
+  - limit: number (default: 4)
+  - collection: string (optional, e.g., "Mugs", "Posters")
+  - showAddToCart: boolean (default: true)
+  - title: string (default: "Featured Products")
+  - subtitle: string
+  - columns: 2 | 3 | 4 (default: 4)
+  
+  SaleProducts Props:
+  - Same as FeaturedProducts but for items on sale
+  
+  ProductGrid Props:
+  - limit: number (optional)
+  - filter: ProductFilter object
+    - collection: string
+    - tag: string
+    - featured: boolean
+    - onSale: boolean
+    - inStock: boolean
+    - minPrice: number
+    - maxPrice: number
+  - sort: ProductSort object
+    - field: 'price' | 'title' | 'rating' | 'featured'
+    - order: 'asc' | 'desc'
+  
+  Utility Functions:
+  - fetchProducts() - Get all products
+  - getFeaturedProducts(limit?) - Get featured products
+  - getSaleProducts(limit?) - Get sale products
+  - getProductsByCollection(collection, limit?) - Get by collection
+  - getCollections() - Get all collection names
+  - getTags() - Get all tags
+  - getColors() - Get all colors
+  - getSizes() - Get all sizes
+-->

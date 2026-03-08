@@ -1,34 +1,145 @@
 ---
-import Banner from '~/components/shop/CategoryBanner.astro';
 import Filters from '~/components/shop/CategoryMenuFilters.astro';
 import ProductGrid from '~/components/shop/ProductGrid.astro';
 import CategoryScroller from '~/components/shop/CategoryScroller.astro';
 import Layout from '~/layouts/PageLayout.astro';
+import type { ProductFilter, ProductSort } from '~/utils/products';
 
 const metadata = {
   title: 'Shop',
 };
+
+// Get URL parameters for filtering
+const url = Astro.url;
+const collection = url.searchParams.get('collection') || undefined;
+const color = url.searchParams.get('color') || undefined;
+const size = url.searchParams.get('size') || undefined;
+const onSale = url.searchParams.get('onSale') === 'true' || undefined;
+const sortParam = url.searchParams.get('sort') || 'featured';
+
+// Build filter object
+const filter: ProductFilter = {
+  collection,
+  onSale,
+};
+
+// Add tag filter (color or size)
+if (color || size) {
+  // We'll filter by tags that match color or size
+  // This is a simplified approach - you may want to enhance this
+  filter.tag = color || size;
+}
+
+// Build sort object
+let sort: ProductSort = { field: 'featured', order: 'desc' };
+switch (sortParam) {
+  case 'price-asc':
+    sort = { field: 'price', order: 'asc' };
+    break;
+  case 'price-desc':
+    sort = { field: 'price', order: 'desc' };
+    break;
+  case 'rating':
+    sort = { field: 'rating', order: 'desc' };
+    break;
+  case 'title':
+    sort = { field: 'title', order: 'asc' };
+    break;
+  default:
+    sort = { field: 'featured', order: 'desc' };
+}
+
+// Build page title
+let pageTitle = 'All Products';
+if (collection) {
+  pageTitle = collection;
+} else if (onSale) {
+  pageTitle = 'Sale Items';
+}
 ---
 
 <Layout metadata={metadata}>
   <div class="flex flex-col min-h-screen">
-    <!-- Banner Section -->
-    <div class="w-full">
-      <Banner />
-    </div>
+  <!-- Breadcrumb 
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <nav class="flex" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+          <li class="inline-flex items-center">
+            <a href="/" class="text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white inline-flex items-center">
+              <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+              </svg>
+              Home
+            </a>
+          </li>
+          <li>
+            <div class="flex items-center">
+              <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <a href="/shop" class="ml-1 text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white md:ml-2">Shop</a>
+            </div>
+          </li>
+          {collection && (
+            <li aria-current="page">
+              <div class="flex items-center">
+                <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="ml-1 text-gray-500 dark:text-gray-400 md:ml-2">{collection}</span>
+              </div>
+            </li>
+          )}
+        </ol>
+      </nav>
+    </div>-->
+    
     <!-- Main Content Section -->
     <div class="flex-1 flex flex-col md:flex-row max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 gap-6">
       <!-- Filters Sidebar -->
       <div class="w-full md:w-1/4 order-2 md:order-1">
-        <Filters />
+        <div class="sticky top-4">
+          <Filters />
+        </div>
       </div>
+      
       <!-- Category Scroller and Product Grid -->
       <div class="w-full md:w-3/4 order-1 md:order-2 flex flex-col gap-6">
+        <!-- Mobile Category Scroller -->
         <div class="block md:hidden">
           <CategoryScroller />
         </div>
+        
+        <!-- Page Header & Sorting -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{pageTitle}</h1>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              {collection ? `Showing all ${collection.toLowerCase()} products` : 'Browse our complete collection'}
+            </p>
+          </div>
+          
+          <!-- Sort Dropdown -->
+          <div class="flex items-center gap-2">
+            <label for="sort" class="text-sm font-medium text-gray-700 dark:text-gray-300">Sort by:</label>
+            <select
+              id="sort"
+              name="sort"
+              class="rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              onchange="window.location.href = window.location.pathname + '?' + new URLSearchParams({...Object.fromEntries(new URLSearchParams(window.location.search)), sort: this.value}).toString()"
+            >
+              <option value="featured" selected={sortParam === 'featured'}>Featured</option>
+              <option value="price-asc" selected={sortParam === 'price-asc'}>Price: Low to High</option>
+              <option value="price-desc" selected={sortParam === 'price-desc'}>Price: High to Low</option>
+              <option value="rating" selected={sortParam === 'rating'}>Top Rated</option>
+              <option value="title" selected={sortParam === 'title'}>Name: A-Z</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Products -->
         <div class="flex-1">
-          <ProductGrid />
+          <ProductGrid filter={filter} sort={sort} />
         </div>
       </div>
     </div>

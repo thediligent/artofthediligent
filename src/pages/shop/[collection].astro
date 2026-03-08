@@ -1,0 +1,145 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import { getCollections, getProductsByCollection } from '~/utils/products';
+import ProductGrid from '~/components/shop/ProductGrid.astro';
+import Filters from '~/components/shop/CategoryMenuFilters.astro';
+import CategoryScroller from '~/components/shop/CategoryScroller.astro';
+import type { ProductSort } from '~/utils/products';
+
+export async function getStaticPaths() {
+  const collections = await getCollections();
+  return collections.map((collection) => ({
+    params: { collection: collection.toLowerCase().replace(/\s+/g, '-') },
+    props: { collectionName: collection },
+  }));
+}
+
+const { collectionName } = Astro.props;
+
+// Get URL parameters for sorting
+const url = Astro.url;
+const sortParam = url.searchParams.get('sort') || 'featured';
+
+// Build sort object
+let sort: ProductSort = { field: 'featured', order: 'desc' };
+switch (sortParam) {
+  case 'price-asc':
+    sort = { field: 'price', order: 'asc' };
+    break;
+  case 'price-desc':
+    sort = { field: 'price', order: 'desc' };
+    break;
+  case 'rating':
+    sort = { field: 'rating', order: 'desc' };
+    break;
+  case 'title':
+    sort = { field: 'title', order: 'asc' };
+    break;
+  default:
+    sort = { field: 'featured', order: 'desc' };
+}
+
+const metadata = {
+  title: `${collectionName} | Shop`,
+  description: `Browse our collection of ${collectionName.toLowerCase()} products`,
+};
+
+// Get products count for this collection
+const collectionProducts = await getProductsByCollection(collectionName);
+const productCount = collectionProducts.length;
+---
+
+<Layout metadata={metadata}>
+  <div class="flex flex-col min-h-screen">
+    <!-- Hero Banner -->
+    <div class="relative bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav class="flex mb-6" aria-label="Breadcrumb">
+          <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+              <a href="/" class="text-white/80 hover:text-white inline-flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                </svg>
+                Home
+              </a>
+            </li>
+            <li>
+              <div class="flex items-center">
+                <svg class="w-6 h-6 text-white/60" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <a href="/shop" class="ml-1 text-white/80 hover:text-white md:ml-2">Shop</a>
+              </div>
+            </li>
+            <li aria-current="page">
+              <div class="flex items-center">
+                <svg class="w-6 h-6 text-white/60" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="ml-1 text-white md:ml-2">{collectionName}</span>
+              </div>
+            </li>
+          </ol>
+        </nav>
+        
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">{collectionName}</h1>
+        <p class="text-xl text-white/90 max-w-2xl">
+          Discover our curated selection of {collectionName.toLowerCase()}. {productCount} {productCount === 1 ? 'item' : 'items'} available.
+        </p>
+      </div>
+    </div>
+    
+    <!-- Main Content Section -->
+    <div class="flex-1 flex flex-col md:flex-row max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 gap-8">
+      <!-- Filters Sidebar -->
+      <div class="w-full md:w-1/4 order-2 md:order-1">
+        <div class="sticky top-4">
+          <Filters />
+        </div>
+      </div>
+      
+      <!-- Products Section -->
+      <div class="w-full md:w-3/4 order-1 md:order-2 flex flex-col gap-6">
+        <!-- Mobile Category Scroller -->
+        <div class="block md:hidden">
+          <CategoryScroller />
+        </div>
+        
+        <!-- Sorting Bar -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+          <div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Showing all {productCount} {productCount === 1 ? 'product' : 'products'}
+            </p>
+          </div>
+          
+          <!-- Sort Dropdown -->
+          <div class="flex items-center gap-2">
+            <label for="sort" class="text-sm font-medium text-gray-700 dark:text-gray-300">Sort by:</label>
+            <select
+              id="sort"
+              name="sort"
+              class="rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              onchange="window.location.href = window.location.pathname + '?sort=' + this.value"
+            >
+              <option value="featured" selected={sortParam === 'featured'}>Featured</option>
+              <option value="price-asc" selected={sortParam === 'price-asc'}>Price: Low to High</option>
+              <option value="price-desc" selected={sortParam === 'price-desc'}>Price: High to Low</option>
+              <option value="rating" selected={sortParam === 'rating'}>Top Rated</option>
+              <option value="title" selected={sortParam === 'title'}>Name: A-Z</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Products Grid -->
+        <div class="flex-1">
+          <ProductGrid 
+            filter={{ collection: collectionName }} 
+            sort={sort} 
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

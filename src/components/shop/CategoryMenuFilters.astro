@@ -1,20 +1,96 @@
 ---
-const categories = ["Journals", "Posters", "Shirts", "Artwork", "Books", "Mugs"];
-const filters = ["Color", "Category", "Size"];
+import { getCollections, getColors, getSizes } from '~/utils/products';
+
+const collections = await getCollections();
+const colors = await getColors();
+const sizes = await getSizes();
+
+const currentCollection = Astro.url.searchParams.get('collection');
+const currentColor = Astro.url.searchParams.get('color');
+const currentSize = Astro.url.searchParams.get('size');
 ---
-<div class="w-full p-4">
-  <h3 class="text-lg font-semibold mb-4">Categories</h3>
-  <ul class="space-y-2">
-    {categories.map(category => (
-      <li><a href={`/shop/${category.toLowerCase()}`} class="">{category}</a></li>
-    ))}
-  </ul>
-  {filters.map(filter => (
-    <div class="mt-4">
-      <h3 class="text-md font-medium flex justify-between items-center">
-        {filter}
-        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/></svg>
-      </h3>
+
+<div class="w-full p-4 space-y-6">
+  <!-- Collections -->
+  <div>
+    <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Collections</h3>
+    <ul class="space-y-2">
+      <li>
+        <a 
+          href="/shop" 
+          class={`block py-1 px-2 rounded transition-colors ${!currentCollection ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900' : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'}`}
+        >
+          All Products
+        </a>
+      </li>
+      {collections.map(collection => (
+        <li>
+          <a 
+            href={`/shop?collection=${encodeURIComponent(collection)}`}
+            class={`block py-1 px-2 rounded transition-colors ${currentCollection === collection ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900' : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'}`}
+          >
+            {collection}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <!-- Colors -->
+  {colors.length > 0 && (
+    <div>
+      <h3 class="text-md font-medium text-gray-900 dark:text-white mb-3">Color</h3>
+      <div class="flex flex-wrap gap-2">
+        {colors.map(color => (
+          <a
+            href={`/shop?${currentCollection ? `collection=${currentCollection}&` : ''}color=${encodeURIComponent(color.name)}`}
+            class={`group relative`}
+            title={color.name}
+          >
+            <span
+              class={`block h-8 w-8 rounded-full border-2 transition-all ${
+                currentColor === color.name 
+                  ? 'border-gray-900 dark:border-white ring-2 ring-gray-900 dark:ring-white ring-offset-2' 
+                  : 'border-gray-300 dark:border-gray-600 hover:border-gray-900 dark:hover:border-white'
+              } ${color.class}`}
+            ></span>
+            <span class="sr-only">{color.name}</span>
+          </a>
+        ))}
+      </div>
     </div>
-  ))}
+  )}
+
+  <!-- Sizes -->
+  {sizes.length > 0 && (
+    <div>
+      <h3 class="text-md font-medium text-gray-900 dark:text-white mb-3">Size</h3>
+      <div class="grid grid-cols-3 gap-2">
+        {sizes.map(size => (
+          <a
+            href={`/shop?${currentCollection ? `collection=${currentCollection}&` : ''}size=${encodeURIComponent(size)}`}
+            class={`text-center py-2 px-3 text-sm font-medium border rounded transition-colors ${
+              currentSize === size
+                ? 'border-gray-900 bg-gray-900 text-white dark:border-white dark:bg-white dark:text-gray-900'
+                : 'border-gray-300 text-gray-700 hover:border-gray-900 dark:border-gray-600 dark:text-gray-300 dark:hover:border-white'
+            }`}
+          >
+            {size}
+          </a>
+        ))}
+      </div>
+    </div>
+  )}
+
+  <!-- Reset Filters -->
+  {(currentCollection || currentColor || currentSize) && (
+    <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+      <a
+        href="/shop"
+        class="block w-full text-center py-2 px-4 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+      >
+        Clear Filters
+      </a>
+    </div>
+  )}
 </div>

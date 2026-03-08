@@ -34,6 +34,7 @@ import CardGrid from '~/components/ui/cardGrid.astro';
 import ProductGrid from '~/components/ui/productGrid.astro';
 import CardGrid2 from '~/components/ui/cardGrid2.astro';
 import ShopCollections from '~/components/ui/ShopCollections.astro';
+import FeaturedProducts from '~/components/shop/FeaturedProducts.astro';
 import HeroVideo from '~/components/widgets/Hero4-video.astro';
 import Features2 from '~/components/widgets/Features2.astro';
 import Steps from '~/components/widgets/Steps.astro';
@@ -61,7 +62,11 @@ const featuredMagazine = articles.find(
 const editorsPicks = articles.filter((article) => article.data.featured).slice(0, 3);
 const featuredArtists = articles.filter((article) => article.data.category === 'Featured Artists').slice(0, 3);
 const shopCollections = [...new Set(products.map((product) => product.data.collection))];
-const mostRead = articles.sort((a, b) => b.data.date - a.data.date).slice(0, 3);
+const mostRead = articles.sort((a, b) => {
+  const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+  const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+  return dateB - dateA;
+}).slice(0, 3);
 
 const metadata = {
   title: 'Art Of The Diligent — Free template for creating websites with Astro + Tailwind CSS',
@@ -97,7 +102,7 @@ const metadata = {
   <!-- Shop Collections Widget ************** -->
   <div class="my-4">
     <div class="text-center pt-10 mb-0">
-      <h2 class="font-black dark:text-white text-5xl lg:text-5xl mb-4 font-heading uppercase">Shop Your Style</h2>
+      <h2 class="font-black dark:text-white text-5xl lg:text-5xl mb-4 font-heading uppercase">Art Your Way</h2>
       <p class="text-lg text-gray-600 dark:text-gray-400">
         Each season, we collaborate with world-class designers to create a collection inspired by the natural world.
       </p>
@@ -160,7 +165,6 @@ const metadata = {
         image: artofthediligent,
         alt: 'Art of the Diligent',
         price: '21.99',
-        size: '11x17',
       },
       {
         title: 'Sunlit Shores',
@@ -175,7 +179,6 @@ const metadata = {
         image: artofthediligent,
         alt: 'Art of the Diligent',
         price: '21.99',
-        size: '11x17',
       },
       {
         title: 'Butterfly Princess',
@@ -183,7 +186,6 @@ const metadata = {
         image: artofthediligent,
         alt: 'Art of the Diligent',
         price: '21.99',
-        size: '11x17',
       },
     ]}
     colsSm={2}
@@ -384,7 +386,15 @@ const metadata = {
     colsMd={3}
     colsLg={3}
   />
-  </div>
+
+  <!-- Featured Products from Collection -->
+  <FeaturedProducts 
+    limit={8}
+    columns={4}
+    title="Shop Our Collection"
+    subtitle="Curated products from our latest collection"
+  />
+
   <!-- Newsletter Signup -->
   <section class="py-16 text-center bg-primary text-white">
     <h2 class="text-3xl font-bold mb-4">Stay Informed</h2>
