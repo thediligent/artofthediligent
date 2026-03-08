@@ -1,6 +1,7 @@
 ---
 import { fetchProducts, filterProducts, sortProducts, type ProductFilter, type ProductSort } from '~/utils/products';
 import { cleanSlug } from '~/utils/permalinks';
+import ProductQuickView from './ProductQuickView.astro';
 
 export interface Props {
   limit?: number;
@@ -45,28 +46,57 @@ const getDisplayPrice = (product: typeof products[0]) => {
     const displayPrice = getDisplayPrice(product);
     
     return (
-      <a href={`/products/${productSlug}`} class="group">
-        <div class="relative w-full aspect-square rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
-          <img 
-            src={product.data.image} 
-            alt={product.data.title} 
-            class="w-full h-full object-cover object-center group-hover:opacity-75 transition-opacity duration-300" 
-          />
-          
-          {/* Sale Badge */}
-          {product.data.onSale && product.data.salePercent && (
-            <div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-              -{product.data.salePercent}%
-            </div>
-          )}
-          
-          {/* Featured Badge */}
-          {product.data.featured && !product.data.onSale && (
-            <div class="absolute top-2 right-2 bg-indigo-500 text-white text-xs font-bold px-2 py-1 rounded">
-              FEATURED
-            </div>
-          )}
-        </div>
+      <div class="group">
+        <a href={`/products/${productSlug}`}>
+          <div class="relative w-full aspect-square rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+            <img 
+              src={product.data.image} 
+              alt={product.data.title} 
+              class="w-full h-full object-cover object-center group-hover:opacity-75 transition-opacity duration-300" 
+            />
+            
+            {/* Sale Badge */}
+            {product.data.onSale && product.data.salePercent && (
+              <div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                -{product.data.salePercent}%
+              </div>
+            )}
+            
+            {/* Featured Badge */}
+            {product.data.featured && !product.data.onSale && (
+              <div class="absolute top-2 right-2 bg-indigo-500 text-white text-xs font-bold px-2 py-1 rounded">
+                FEATURED
+              </div>
+            )}
+
+            {/* Quick View Icon */}
+            <button
+              type="button"
+              onclick={`event.preventDefault(); event.stopPropagation(); openQuickView(${JSON.stringify({
+                id: product.data.id,
+                title: product.data.title,
+                price: product.data.price,
+                salePrice: product.data.salePrice,
+                onSale: product.data.onSale,
+                image: product.data.image,
+                description: product.data.description,
+                url: `/products/${productSlug}`,
+                categories: product.data.collection,
+                colors: product.data.colors,
+                sizes: product.data.sizes,
+              })})`}
+              class="absolute top-2 left-2 bg-indigo-600 text-white p-2 rounded-full shadow-lg hover:bg-indigo-700 transition-colors opacity-0 group-hover:opacity-100"
+              aria-label="Quick view"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2-icon lucide-maximize-2">
+                <path d="M15 3h6v6"/>
+                <path d="m21 3-7 7"/>
+                <path d="m3 21 7-7"/>
+                <path d="M9 21H3v-6"/>
+              </svg>
+            </button>
+          </div>
+        </a>
         
         <div class="mt-4">
           <h3 class="text-gray-900 dark:text-gray-200 text-lg font-medium group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
@@ -116,7 +146,10 @@ const getDisplayPrice = (product: typeof products[0]) => {
             </div>
           )}
         </div>
-      </a>
+      </div>
     );
   })}
 </div>
+
+<!-- Product Quick View Modal -->
+<ProductQuickView />

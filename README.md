@@ -9,6 +9,13 @@
 
 ## ✨ What's New in This Version
 
+### 🎉 Latest Updates (March 2026)
+- ⚡ **Quick View Modal**: Instant product previews with add-to-cart functionality
+- 🛍️ **Enhanced Shop Experience**: Improved product grids with hover interactions
+- 🎨 **Maximize Icons**: Intuitive UI for quick product access
+- 💳 **Snipcart Integration**: Fully functional shopping cart and secure checkout
+- 📱 **Mobile Optimized**: Responsive quick view modal for all devices
+
 ### Core Features
 - ✅ **Production-ready** scores in **PageSpeed Insights** reports
 - ✅ Integration with **Tailwind CSS** supporting **Dark mode** and **_RTL_**
@@ -21,7 +28,9 @@
 ### 🛍️ Diligent Marketing Solutions Enhancements
 
 #### Custom Components & Layouts
-- **Enhanced Shop Components**: CategoryBanner, CategoryMenuFilters, CategoryScroller, ProductGrid
+- **Enhanced Shop Components**: CategoryBanner, CategoryMenuFilters, CategoryScroller, ProductGrid, FeaturedProducts
+- **Quick View Modal**: Instant product preview with add-to-cart functionality (NEW! ⚡)
+- **Snipcart Integration**: Fully integrated shopping cart with secure checkout
 - **Advanced UI Components**: Custom CardGrid variations, ItemGrid layouts, ShopCollections widget
 - **Product Management**: Integrated product content structure with custom product pages
 - **Category System**: Dynamic category pages with filtering and navigation
@@ -34,11 +43,12 @@
 - **Navigation**: Enhanced navigation system with multi-level support
 
 #### Upcoming Features 🚀
-- **E-commerce Integration**: Full shopping cart functionality (Coming Soon!)
-- **Payment Gateway**: Secure checkout and payment processing (In Development)
+- **Enhanced Shopping Cart**: Advanced cart management with persistent state
+- **Payment Gateway Expansion**: Multiple payment options and currencies
 - **Inventory Management**: Real-time product availability tracking
 - **Order Management**: Complete customer order tracking system
 - **Customer Accounts**: User authentication and profile management
+- **Product Reviews System**: Customer ratings and review functionality
 
 #### Developer Experience
 - **Docker Support**: Containerized development environment with docker-compose
@@ -140,7 +150,13 @@ Inside **Art Of The Diligent** template, you'll see the following folders and fi
 │   │   │   ├── CategoryBanner.astro
 │   │   │   ├── CategoryMenuFilters.astro
 │   │   │   ├── CategoryScroller.astro
-│   │   │   └── ProductGrid.astro
+│   │   │   ├── FeaturedProducts.astro
+│   │   │   ├── ProductGrid.astro
+│   │   │   ├── ProductQuickView.astro    # ⚡ Quick View Modal (NEW)
+│   │   │   ├── SaleProducts.astro
+│   │   │   ├── SnipcartBuyButton.astro
+│   │   │   ├── SnipcartCart.astro
+│   │   │   └── SnipcartProductGrid.astro
 │   │   ├── ui/                # Enhanced UI components
 │   │   │   ├── cardGrid.astro
 │   │   │   ├── cardGrid2.astro
@@ -419,43 +435,52 @@ Clone this repository on your own GitHub account and deploy to Vercel:
 
 ## Roadmap
 
-### 🛍️ E-Commerce Integration (Coming Soon!)
+### 🛍️ E-Commerce Features
 
-We're actively developing a complete e-commerce solution for Art Of The Diligent. Here's what's in the pipeline:
+#### ✅ Completed Features
+- [x] **Quick View Modal**: Instant product preview with add-to-cart
+- [x] **Snipcart Integration**: Shopping cart and secure checkout
+- [x] **Product Display**: Advanced grid layouts and featured products
+- [x] **Category System**: Navigation, filtering, and sorting
+- [x] **Product Pages**: Detailed pages with variant selection
+- [x] **Responsive Design**: Mobile-optimized shopping experience
 
-#### Phase 1: Shopping Cart (In Development)
-- [ ] **Cart Functionality**: Add to cart, remove items, update quantities
-- [ ] **Cart Persistence**: LocalStorage and session management
-- [ ] **Cart Widget**: Floating cart icon with item count
-- [ ] **Cart Page**: Detailed cart view with product images and pricing
-- [ ] **Cart Calculations**: Subtotal, tax, shipping estimates
+#### Phase 1: Enhanced Shopping Experience (In Progress)
+- [ ] **Cart Enhancements**: Persistent cart state across sessions
+- [ ] **Wishlist Feature**: Save products for later purchase
+- [ ] **Product Comparison**: Side-by-side product comparison
+- [ ] **Recently Viewed**: Track and display recently viewed products
+- [ ] **Smart Recommendations**: AI-powered product suggestions
 
-#### Phase 2: Checkout & Payments
-- [ ] **Checkout Flow**: Multi-step checkout process
-- [ ] **Payment Gateway Integration**: Stripe/PayPal support
-- [ ] **Address Management**: Shipping and billing address forms
-- [ ] **Order Summary**: Clear order review before purchase
-- [ ] **Email Notifications**: Order confirmation and updates
-
-#### Phase 3: Advanced Features
+#### Phase 2: Customer Engagement
+- [ ] **Product Reviews**: Customer ratings and feedback system
 - [ ] **Customer Accounts**: User registration and login
-- [ ] **Order History**: Track past purchases
-- [ ] **Wishlist**: Save products for later
-- [ ] **Product Reviews**: Customer feedback and ratings
-- [ ] **Inventory Management**: Real-time stock tracking
+- [ ] **Order History**: Track past purchases and reorder
+- [ ] **Email Notifications**: Order confirmations and shipping updates
+- [ ] **Newsletter Integration**: Automated email campaigns
 
-#### Phase 4: Admin & Analytics
-- [ ] **Admin Dashboard**: Order management interface
-- [ ] **Sales Analytics**: Revenue and conversion tracking
-- [ ] **Product Management**: Easy product updates via DecapCMS
-- [ ] **Customer Management**: Customer data and preferences
+#### Phase 3: Advanced Analytics & Management
+- [ ] **Admin Dashboard**: Order and product management interface
+- [ ] **Sales Analytics**: Revenue tracking and conversion metrics
+- [ ] **Inventory Management**: Real-time stock tracking and alerts
+- [ ] **Customer Insights**: Behavioral analytics and segmentation
+- [ ] **Multi-currency Support**: International pricing and checkout
 
 ### Current Shop Features ✅
-- Product display with ProductGrid component
-- Category-based navigation
-- Product pages with detailed information
-- Category filtering and browsing
-- Responsive product layouts
+- **Product Display**: Advanced ProductGrid and FeaturedProducts components
+- **Quick View Modal**: Instant product preview without leaving the page ⚡
+  - Product image, title, and pricing
+  - Color and size selection
+  - Add to cart functionality
+  - Quick link to full product details
+  - Smooth animations and responsive design
+- **Snipcart Integration**: Fully functional shopping cart and checkout
+- **Category Navigation**: Category-based browsing and filtering
+- **Product Pages**: Detailed product information with variants
+- **Category Filtering**: Advanced filtering and sorting options
+- **Responsive Layouts**: Mobile-first design for all devices
+- **Sale Badges**: Automatic sale percentage display
+- **Featured Products**: Highlight specific products on homepage
 
 <br>
 
@@ -469,11 +494,11 @@ A: This is a professionally customized version by Diligent Marketing Solutions f
 **Q: Can I use this for my own project?**  
 A: Yes! This template is open source under the MIT license. However, it's specifically tailored for The Art Of The Diligent brand, so you may need to customize branding and content.
 
-**Q: When will the shopping cart be available?**  
-A: The shopping cart and checkout features are currently in development. Check the [Roadmap](#roadmap) section for detailed progress and upcoming features.
+**Q: What is the Quick View feature?**  
+A: The Quick View modal allows users to preview products instantly without navigating away from the current page. Users can see product details, select options (color/size), and add items to cart—all in a beautiful modal overlay. This improves the shopping experience by reducing page loads and keeping users engaged.
 
 **Q: Is the shop functional?**  
-A: Currently, the shop displays products with categories and filtering. Full e-commerce functionality (cart, checkout, payments) is coming soon.
+A: Yes! The shop includes working product displays, Snipcart integration for cart and checkout, category filtering, and the new Quick View feature. Users can browse products, add them to cart, and complete purchases securely through Snipcart.
 
 **Q: Can I add products without coding?**  
 A: Yes! This version includes DecapCMS integration for easy content management. You can add and edit products through the CMS interface.
@@ -532,12 +557,14 @@ For major changes or custom development inquiries, please contact [Diligent Mark
 Based on the excellent [AstroWind](https://github.com/onwidget/astrowind) template, originally created by [onWidget](https://onwidget.com) and maintained by a community of [contributors](https://github.com/onwidget/astrowind/graphs/contributors).
 
 ### Custom Development by Diligent Marketing Solutions
-- Shop and e-commerce components
-- Product management system
-- Enhanced UI components
-- Docker containerization
-- DecapCMS integration
-- Advanced content architecture
+- Shop and e-commerce components with Quick View functionality
+- Snipcart integration for cart and checkout
+- Product management system with advanced filtering
+- Enhanced UI components with interactive modals
+- Docker containerization for consistent deployments
+- DecapCMS integration for content management
+- Advanced content architecture and routing
+- Mobile-first responsive design implementation
 
 ### Built With
 - [Astro 5.0](https://astro.build/) - The web framework for content-driven websites

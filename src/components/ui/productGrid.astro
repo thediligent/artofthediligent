@@ -1,5 +1,6 @@
 ---
 import type { ImageMetadata } from 'astro';
+import ProductQuickView from '../shop/ProductQuickView.astro';
 
 interface Props {
   products: {
@@ -21,24 +22,54 @@ let { products, colsSm = 2, colsMd = 3, colsLg = 4 } = Astro.props;
   <div class={`grid grid-cols-${colsSm} md:grid-cols-${colsMd} lg:grid-cols-${colsLg} gap-6`}>
     {
       products.map((product) => (
-        <a href={product.url} class="block">
-          <div class="relative group overflow-hidden rounded-lg">
-            <img
-              src={typeof product.image === 'string' ? product.image : product.image.src}
-              alt={product.alt || product.title}
-              class="w-full h-128 object-cover transition-transform duration-300 group-hover:scale-110"
-            />
-            <div class="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-40 transition-opacity duration-300 flex items-end">
-              <h3 class="hidden text-white text-xl font-semibold p-6 w-full bg-gradient-to-t from-black/60 to-transparent">
-                {product.title}
-              </h3>
+        <div class="block">
+          <a href={product.url}>
+            <div class="relative group overflow-hidden rounded-lg">
+              <img
+                src={typeof product.image === 'string' ? product.image : product.image.src}
+                alt={product.alt || product.title}
+                class="w-full h-128 object-cover transition-transform duration-300 group-hover:scale-110"
+              />
+              <div class="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-40 transition-opacity duration-300 flex items-end">
+                <h3 class="hidden text-white text-xl font-semibold p-6 w-full bg-gradient-to-t from-black/60 to-transparent">
+                  {product.title}
+                </h3>
+              </div>
+
+              {/* Quick View Icon */}
+              <button
+                type="button"
+                onclick={`event.preventDefault(); event.stopPropagation(); openQuickView(${JSON.stringify({
+                  id: product.title.toLowerCase().replace(/\s+/g, '-'),
+                  title: product.title,
+                  price: product.price,
+                  image: typeof product.image === 'string' ? product.image : product.image.src,
+                  description: product.alt || '',
+                  url: product.url,
+                  categories: 'Art',
+                  colors: [],
+                  sizes: [],
+                })})`}
+                class="absolute top-3 left-3 bg-indigo-600 text-white p-2 rounded-full shadow-lg hover:bg-indigo-700 transition-colors opacity-0 group-hover:opacity-100"
+                aria-label="Quick view"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2-icon lucide-maximize-2">
+                  <path d="M15 3h6v6"/>
+                  <path d="m21 3-7 7"/>
+                  <path d="m3 21 7-7"/>
+                  <path d="M9 21H3v-6"/>
+                </svg>
+              </button>
             </div>
-          </div>
+          </a>
           <h4 class="text-gray-900 dark:text-gray-200 text-lg font-medium mt-2">{product.title}</h4>
           <p class="text-sm text-gray-500">starting at</p>
           <p class="text-gray-900 dark:text-gray-200 text text-lg font-semibold">${product.price}</p>
-        </a>
+        </div>
       ))
     }
   </div>
 </div>
+
+<!-- Product Quick View Modal -->
+<ProductQuickView />

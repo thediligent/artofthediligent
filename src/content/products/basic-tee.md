@@ -14,11 +14,11 @@ colors:
   - name: Gray
     class: bg-gray-300
     hex: "#D1D5DB"
-image: https://images.unsplash.com/photo-1598033129186-750536a6a3a0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80
+image: https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&q=80
 images:
-  - https://images.unsplash.com/photo-1598033129186-750536a6a3a0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80
-  - https://images.unsplash.com/photo-1581655353564-df123a1eb820?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80
-  - https://images.unsplash.com/photo-1594938298603-c8148c4dae35?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80
+  - https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&q=80
+  - https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&q=80
+  - https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&q=80
 description: The Basic tee is an honest new take on a classic. The tee uses super soft, pre-shrunk cotton for true comfort and a dependable fit. They are hand cut and sewn locally, with a special dye technique that gives each tee its own look.
 fabricCare:
   - Only the best materials
