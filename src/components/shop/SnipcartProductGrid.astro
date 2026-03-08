@@ -1,0 +1,89 @@
+---
+import { getCollection } from 'astro:content';
+import { cleanSlug } from '~/utils/permalinks';
+import SnipcartBuyButton from './SnipcartBuyButton.astro';
+
+export interface Props {
+  limit?: number;
+  featured?: boolean;
+  collection?: string;
+  showAddToCart?: boolean;
+}
+
+const { limit, featured, collection: filterCollection, showAddToCart = true } = Astro.props;
+
+// Get all products
+let products = await getCollection('products');
+
+// Filter by featured if specified
+if (featured !== undefined) {
+  products = products.filter((p) => p.data.featured === featured);
+}
+
+// Filter by collection if specified
+if (filterCollection) {
+  products = products.filter((p) => p.data.collection === filterCollection);
+}
+
+// Limit the number of products if specified
+if (limit) {
+  products = products.slice(0, limit);
+}
+---
+
+<div class="w-full p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+  {
+    products.map((product) => {
+      const slug = cleanSlug(product.data.title) || product.id;
+      const productUrl = `/products/${slug}`;
+      const displayPrice = product.data.onSale && product.data.salePrice ? product.data.salePrice : product.data.price;
+
+      return (
+        <div class="group relative">
+          {product.data.onSale && product.data.salePercent && (
+            <div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full z-10">
+              -{product.data.salePercent}%
+            </div>
+          )}
+          <a href={productUrl}>
+            <div class="w-full h-64 rounded-lg overflow-hidden mb-3">
+              <img
+                src={product.data.image}
+                alt={product.data.title}
+                class="w-full h-full object-cover group-hover:opacity-75 transition-opacity duration-300"
+              />
+            </div>
+            <h3 class="text-gray-900 dark:text-gray-200 text-lg font-medium mb-1">{product.data.title}</h3>
+            <p class="text-sm text-gray-500 mb-1">{product.data.collection}</p>
+            
+            {product.data.onSale && product.data.salePrice ? (
+              <div class="mb-3">
+                <div class="flex items-center gap-2">
+                  <p class="text-red-600 dark:text-red-400 text-lg font-bold">${product.data.salePrice}</p>
+                  <p class="text-gray-500 text-sm line-through">${product.data.price}</p>
+                </div>
+              </div>
+            ) : (
+              <p class="text-gray-900 dark:text-gray-200 text-lg font-semibold mb-3">${product.data.price}</p>
+            )}
+          </a>
+          {showAddToCart && (
+            <SnipcartBuyButton
+              id={product.data.id}
+              name={product.data.title}
+              price={displayPrice}
+              url={productUrl}
+              description={product.data.description}
+              image={product.data.image}
+              categories={product.data.collection}
+              className="w-full"
+              variant="outline"
+            >
+              Add to Cart
+            </SnipcartBuyButton>
+          )}
+        </div>
+      );
+    })
+  }
+</div>

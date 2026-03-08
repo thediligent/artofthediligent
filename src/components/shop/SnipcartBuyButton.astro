@@ -1,0 +1,56 @@
+---
+export interface Props {
+  id: string;
+  name: string;
+  price: number;
+  url: string;
+  description?: string;
+  image?: string;
+  categories?: string;
+  customFields?: Array<{ name: string; options?: string; required?: boolean }>;
+  className?: string;
+  variant?: 'primary' | 'secondary' | 'outline';
+}
+
+const {
+  id,
+  name,
+  price,
+  url,
+  description = '',
+  image = '',
+  categories = '',
+  customFields = [],
+  className = '',
+  variant = 'primary',
+} = Astro.props;
+
+const variantClasses = {
+  primary: 'bg-blue-600 hover:bg-blue-700 text-white',
+  secondary: 'bg-gray-800 hover:bg-gray-900 text-white',
+  outline: 'border-2 border-gray-800 hover:bg-gray-800 hover:text-white text-gray-800',
+};
+
+const buttonClass = `${variantClasses[variant]} px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${className}`;
+---
+
+<button
+  class={`snipcart-add-item ${buttonClass}`}
+  data-item-id={id}
+  data-item-price={price}
+  data-item-url={url}
+  data-item-description={description}
+  data-item-image={image}
+  data-item-name={name}
+  data-item-categories={categories}
+  {
+    ...customFields.reduce((acc, field, index) => {
+      acc[`data-item-custom${index + 1}-name`] = field.name;
+      if (field.options) acc[`data-item-custom${index + 1}-options`] = field.options;
+      if (field.required) acc[`data-item-custom${index + 1}-required`] = 'true';
+      return acc;
+    }, {} as Record<string, string>)
+  }
+>
+  <slot>Add to Cart</slot>
+</button>

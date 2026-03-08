@@ -1,0 +1,139 @@
+/**
+ * Snipcart Custom Theme for Art Of The Diligent
+ * 
+ * This file customizes the Snipcart cart appearance to match your site's design
+ * Simplified version - only essential fixes applied
+ */
+
+/* ============================================
+   Z-INDEX FIXES - ESSENTIAL
+   ============================================ */
+
+/* Ensure Snipcart modal is above everything */
+#snipcart {
+  position: relative;
+  z-index: 9999 !important;
+}
+
+#snipcart-overlay {
+  z-index: 9998 !important;
+}
+
+.snipcart-modal {
+  z-index: 9999 !important;
+}
+
+.snipcart {
+  z-index: 9999 !important;
+}
+
+/* ============================================
+   ITEM COUNT BADGE - CUSTOM
+   ============================================ */
+
+/* Item count badge on cart icon */
+.snipcart-items-count {
+  background-color: #3b82f6 !important;
+  color: white !important;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.25rem;
+}
+
+
+/* ============================================
+   ADVANCED CUSTOMIZATION - COMMENTED OUT
+   To customize colors and styling, uncomment sections below
+   and adjust values as needed
+   ============================================ */
+
+/*
+:root {
+  /* Background Colors *\/
+  --bgColor-default: #ffffff;
+  --bgColor-alt: #f7f7f7;
+  --bgColor-input: #ffffff;
+  --bgColor-buttonPrimary: #000000;
+  --bgColor-buttonPrimary-hover: #1f1f1f;
+  --bgColor-buttonSecondary: #ffffff;
+  --bgColor-buttonSecondary-hover: #f5f5f5;
+  
+  /* Text Colors *\/
+  --color-default: #000000;
+  --color-alt: #666666;
+  --color-link: #000000;
+  --color-buttonPrimary: #ffffff;
+  --color-buttonSecondary: #000000;
+  
+  /* Border Colors *\/
+  --borderColor-default: #e5e5e5;
+  
+  /* Border Radius *\/
+  --borderRadius-default: 8px;
+}
+*/
+
+/*
+/* Cart Header Customization *\/
+.snipcart-cart-header {
+  background-color: #ffffff;
+  padding: 1.5rem;
+}
+
+.snipcart-cart-header__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #000000;
+}
+*/
+
+/*
+/* Button Customization *\/
+.snipcart__button--primary {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-radius: 8px;
+  padding: 0.875rem 1.5rem;
+}
+
+.snipcart__button--primary:hover {
+  background-color: #1f1f1f !important;
+}
+*/
+
+/*
+/* Cart Summary Customization *\/
+.snipcart-cart-summary {
+  background-color: #ffffff;
+  padding: 1.5rem;
+}
+*/
+
+/* ============================================
+   NOTES
+   ============================================ */
+
+/*
+ * This simplified version only includes:
+ * 1. Z-index fixes for header conflicts
+ * 2. Custom item count badge styling
+ *
+ * All other styling is commented out to let Snipcart's
+ * default theme work properly.
+ *
+ * To customize:
+ * 1. Uncomment sections above
+ * 2. Adjust colors and values as needed
+ * 3. Clear browser cache (Ctrl+Shift+R)
+ * 4. Test changes
+ *
+ * For full documentation, see:
+ * - SNIPCART-STYLING-GUIDE.md
+ * - https://docs.snipcart.com/v3/setup/theming
+ */

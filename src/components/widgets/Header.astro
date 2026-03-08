@@ -4,6 +4,7 @@ import Logo from '~/components/Logo.astro';
 import ToggleTheme from '~/components/common/ToggleTheme.astro';
 import ToggleMenu from '~/components/common/ToggleMenu.astro';
 import Button from '~/components/ui/Button.astro';
+import SnipcartCart from '~/components/shop/SnipcartCart.astro';
 
 import { getHomePermalink } from '~/utils/permalinks';
 import { trimSlash, getAsset } from '~/utils/permalinks';
@@ -149,6 +150,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
               </a>
             )
           }
+          <SnipcartCart className="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center" />
         </div>
         {
           actions?.length ? (

@@ -1,10 +1,8 @@
----
+﻿---
 import Layout from '~/layouts/PageLayout.astro';
 import { getCollection } from 'astro:content';
 import { cleanSlug } from '~/utils/permalinks';
-import Content from '~/components/widgets/Content.astro';
-import Button from '~/components/ui/Button.astro';
-import artofthediligent from '~/assets/images/artofthediligent.webp';
+import SnipcartBuyButton from '~/components/shop/SnipcartBuyButton.astro';
 
 export async function getStaticPaths() {
   const products = await getCollection('products');
@@ -16,224 +14,279 @@ export async function getStaticPaths() {
 
 const { product } = Astro.props;
 
-// Mock image array for the slider (replace with product.data.images if available)
-const productImages = product.data.images || [
-  artofthediligent.src,
-  'https://swiperjs.com/demos/images/nature-2.jpg',
-  'https://swiperjs.com/demos/images/nature-3.jpg',
-  'https://swiperjs.com/demos/images/nature-4.jpg',
+// Use product images if available
+const productImages = product.data.images || [product.data.image];
+
+// Generate breadcrumb from collection
+const breadcrumbs = [
+  { label: product.data.collection, href: '#' },
+  { label: product.data.tags[0] || 'Products', href: '#' },
+  { label: product.data.title, current: true },
 ];
+
+// Generate star ratings
+const fullStars = Math.floor(product.data.rating || 0);
+const emptyStars = 5 - Math.ceil(product.data.rating || 0);
 ---
 
 <Layout title={`${product.data.title} | Art Of The Diligent`}>
-  <section class="py-8">
-    <div class="flex flex-col lg:flex-row w-full">
-      <div class="flex flex-col w-full lg:basis-[65vw] lg:flex-row-reverse">
-        <div class="w-full basis-128 mb-8 lg:basis-[50vw] lg:mb-0 px-4 lg:pl-4">
-          <!-- Main Image Slider -->
-          <div
-            style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff"
-            class="swiper mySwiper2 min-h-[720px]"
-          >
-            <div class="swiper-wrapper">
-              {
-                productImages.map((img) => (
-                  <div class="swiper-slide">
-                    <img src={img} alt={product.data.title} class="w-full h-96 object-cover rounded" />
-                  </div>
-                ))
-              }
-            </div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
-          </div>
-        </div>
-        <div class="w-full lg:basis-[10vw] mt-4 lg:mt-0 px-4 lg:pr-4">
-          <!-- Vertical/Horizontal Thumbnail Slider -->
-          <div class="swiper mySwiper" style="height: 100%;">
-            <div class="swiper-wrapper">
-              {
-                productImages.map((img) => (
-                  <div class="swiper-slide">
-                    <img src={img} alt={`${product.data.title} thumbnail`} class="w-full h-24 object-cover rounded" />
-                  </div>
-                ))
-              }
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="flex flex-col w-full basis-[35vw] lg:pl-8 mb-8 lg:mb-0 lg:mr-8">
-        <div class="flex items-center justify-between">
-          <h1 class="text-4xl font-bold mb-4">{product.data.title}</h1>
-          <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full">NEW</span>
-        </div>
-        <p class="text-2xl text-gray-800 mb-4">${product.data.price}</p>
-        <p class="text-2xl text-gray-600 mb-4">{product.data.size}</p>
-        <p class="mb-4 text-gray-600">{product.data.description}</p>
-        <p class="text-gray-600 mb-4">Tags: {product.data.tags.join(', ')}</p>
-        <div class="flex items-center space-x-4">
-          <button class="bg-black text-white px-6 py-2 rounded hover:bg-gray-800">ADD TO CART</button>
-          <button class="border border-gray-300 px-6 py-2 rounded hover:bg-gray-100">ORDER BY OtherPay</button>
-        </div>
-      </div>
-    </div>
-  </section>
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="mb-8">
+      <ol role="list" class="flex items-center space-x-2">
+        {breadcrumbs.map((crumb, index) => (
+          <>
+            {index > 0 && <li class="text-gray-400 dark:text-gray-500">/</li>}
+            <li>
+              {crumb.current ? (
+                <span class="text-sm font-medium text-gray-900 dark:text-gray-100" aria-current="page">{crumb.label}</span>
+              ) : (
+                <a href={crumb.href} class="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">{crumb.label}</a>
+              )}
+            </li>
+          </>
+        ))}
+      </ol>
+    </nav>
 
-  <section class="py-16 bg-gray-100">
-    <Content
-      id="Web Design & Development Services"
-      image={{
-        src: 'https://s3.us-east-1.amazonaws.com/media.diligentmarketing.solutions/services/web-design/vehicle-floor-liner-web-design.webp',
-        alt: 'Rubber vehicle floor liner Web Design',
-        loading: 'eager',
-        class: 'hidden lg:block rounded-lg shadow-lg',
-      }}
-    >
-      <Fragment slot="content">
-        <h2 class="text-center md:text-left text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-8">
-          Web Design & Development
-        </h2>
-        <h3 class="text-center md:text-left">Build Online Identity with Diligent Marketing Solutions</h3>
-        <img
-          src="https://s3.us-east-1.amazonaws.com/media.diligentmarketing.solutions/services/web-design/vehicle-floor-liner-web-design.webp"
-          alt="Professional Web Design and Development Services by Diligent Marketing Solutions"
-          class="w-full h-auto mb-6 rounded-lg shadow-lg py-3 lg:hidden"
-        />
-        <h3 class="text-1xl font-bold tracking-tight dark:text-white sm:text-2xl my-8">
-          Why Most Websites Fail—and How We Fix It
-        </h3>
-        <p>
-          Your website isn’t just a digital brochure—it’s your 24/7 storefront, lead generator, and growth engine. Yet
-          most business owners settle for slow, outdated, or clunky sites that lose visitors the second they arrive.
-        </p>
-        <h4 class="py-4 font-bold text-xl">Invest in Professional Web Design and Development.</h4>
-        <p>
-          At Diligent Marketing Solutions, we build websites that don’t just look good—they perform. Fast, modern, and
-          conversion-focused, our sites grab attention, guide visitors, and turn clicks into paying customers. From
-          fixing weak user experience to boosting traffic and conversion rates, we tackle the issues that are quietly
-          costing you revenue.
-        </p>
-        <p class="pt-4">
-          Stop leaving money on the table. Let us create a website that reflects your brand, engages your audience, and
-          drives real, measurable results.
-        </p>
-        <div class="mt-12 text-left">
-          <Button
-            href="/contact-us"
-            text="Get A Free Website Customer Experience Audit"
-            variant="primary"
-            class="btn btn-primary px-6 py-3"
+    <div class="lg:grid lg:grid-cols-2 lg:gap-x-8">
+      
+      <!-- Image column: Left on desktop, top on mobile -->
+      <div class="lg:order-1">
+        
+        <!-- Mobile title, price, reviews -->
+        <div class="mt-4 lg:hidden">
+          <div class="flex items-center justify-between">
+            <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">{product.data.title}</h1>
+            {product.data.onSale && (
+              <span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                SALE {product.data.salePercent}% OFF
+              </span>
+            )}
+          </div>
+          
+          {product.data.onSale && product.data.salePrice ? (
+            <div class="mt-2 flex items-center gap-2">
+              <p class="text-2xl font-medium text-red-600">${product.data.salePrice}</p>
+              <p class="text-lg text-gray-500 dark:text-gray-400 line-through">${product.data.price}</p>
+            </div>
+          ) : (
+            <p class="mt-2 text-2xl font-medium text-gray-900 dark:text-gray-100">${product.data.price}</p>
+          )}
+
+          <!-- Reviews -->
+          {product.data.rating && product.data.reviewCount && (
+            <div class="mt-4 flex items-center">
+              <div class="flex items-center">
+                {[...Array(fullStars)].map(() => (
+                  <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+                {[...Array(emptyStars)].map(() => (
+                  <svg class="h-5 w-5 text-gray-200 dark:text-gray-700" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <p class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-100">{product.data.rating} out of 5</p>
+              <span class="mx-2 text-gray-400 dark:text-gray-500">·</span>
+              <a href="#reviews" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300">See all {product.data.reviewCount} reviews</a>
+            </div>
+          )}
+        </div>
+
+        <!-- Main image -->
+        <div class="mt-6 lg:mt-0">
+          <img
+            src={productImages[0]}
+            alt={product.data.title}
+            class="h-auto w-full rounded-lg object-cover object-center lg:h-full"
           />
         </div>
-      </Fragment>
-      <Fragment slot="bg">
-        <div class="absolute inset-0 bg-zinc-50 dark:bg-transparent"></div>
-      </Fragment>
-    </Content>
-  </section>
-  
+      </div>
 
-  <!-- Swiper CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+      <!-- Details column: Right on desktop, bottom on mobile -->
+      <div class="mt-10 lg:mt-0 lg:order-2">
+        
+        <!-- Desktop title, price, reviews -->
+        <div class="hidden lg:block">
+          <div class="flex items-center justify-between">
+            <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">{product.data.title}</h1>
+            {product.data.onSale && (
+              <span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                SALE {product.data.salePercent}% OFF
+              </span>
+            )}
+          </div>
+          
+          {product.data.onSale && product.data.salePrice ? (
+            <div class="mt-4 flex items-center gap-3">
+              <p class="text-3xl tracking-tight text-red-600 font-bold">${product.data.salePrice}</p>
+              <p class="text-xl text-gray-500 dark:text-gray-400 line-through">${product.data.price}</p>
+              <p class="text-sm text-green-600 font-semibold">
+                Save ${(product.data.price - product.data.salePrice).toFixed(2)}!
+              </p>
+            </div>
+          ) : (
+            <p class="mt-4 text-3xl tracking-tight text-gray-900 dark:text-gray-100">${product.data.price}</p>
+          )}
 
-  <!-- Custom Styles for Thumbnail Placement -->
-  <style>
-    .swiper.mySwiper {
-      width: 100%;
-      height: 100%;
-      max-height: 400px;
-    }
-    .swiper.mySwiper .swiper-wrapper {
-      flex-direction: row;
-    }
-    .swiper.mySwiper .swiper-slide {
-      width: 25% !important;
-      height: 100px;
-      opacity: 0.4;
-      margin-right: 10px;
-    }
-    .swiper.mySwiper .swiper-slide-thumb-active {
-      opacity: 1;
-    }
-    .swiper.mySwiper2 {
-      width: 100%;
-      height: 400px;
-    }
-    .swiper.mySwiper2 .swiper-slide {
-      background: #444;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .swiper.mySwiper2 .swiper-slide img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .swiper-button-next,
-    .swiper-button-prev {
-      color: #fff;
-    }
-    @media (max-width: 1024px) {
-      .swiper.mySwiper {
-        max-height: none;
-        height: auto;
-      }
-      .swiper.mySwiper .swiper-wrapper {
-        flex-direction: row;
-      }
-      .swiper.mySwiper .swiper-slide {
-        width: 25% !important;
-        height: 100px;
-        margin-right: 10px;
-      }
-      .swiper.mySwiper2 {
-        height: 300px;
-      }
-    }
-    @media (min-width: 1025px) {
-      .swiper.mySwiper .swiper-wrapper {
-        flex-direction: column;
-      }
-      .swiper.mySwiper .swiper-slide {
-        width: 100% !important;
-        height: 100px;
-        margin-bottom: 10px;
-        margin-right: 0;
-      }
-    }
-  </style>
+          <!-- Reviews -->
+          {product.data.rating && product.data.reviewCount && (
+            <div class="mt-6 flex items-center">
+              <div class="flex items-center">
+                {[...Array(fullStars)].map(() => (
+                  <svg class="h-6 w-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+                {[...Array(emptyStars)].map(() => (
+                  <svg class="h-6 w-6 text-gray-200 dark:text-gray-700" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <p class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-100">{product.data.rating} out of 5 stars</p>
+              <span class="mx-2 text-gray-400 dark:text-gray-500">·</span>
+              <a href="#reviews" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300">See all {product.data.reviewCount} reviews</a>
+            </div>
+          )}
+        </div>
 
-  <!-- Initialize Swiper -->
-  <script client:only>
-    import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js';
+        <!-- Form -->
+        <form class="mt-8">
+          
+          <!-- Color -->
+          {product.data.colors && product.data.colors.length > 0 && (
+            <div>
+              <h2 class="text-sm font-medium text-gray-900 dark:text-gray-100">Color</h2>
+              <fieldset class="mt-3">
+                <legend class="sr-only">Choose color</legend>
+                <div class="flex gap-4">
+                  {product.data.colors.map((color, index) => (
+                    <label class="relative cursor-pointer">
+                      <input 
+                        type="radio" 
+                        name="color" 
+                        value={color.name.toLowerCase()} 
+                        class="sr-only" 
+                        checked={index === 0}
+                      />
+                      <span 
+                        aria-hidden="true" 
+                        class={`block h-8 w-8 rounded-full border border-gray-300 dark:border-gray-600 ${color.class} ${index === 0 ? 'ring-2 ring-gray-900 dark:ring-gray-100 ring-offset-2' : ''}`}
+                      ></span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            </div>
+          )}
 
-    var swiper = new Swiper('.mySwiper', {
-      direction: 'horizontal',
-      loop: true,
-      spaceBetween: 10,
-      slidesPerView: 4,
-      freeMode: true,
-      watchSlidesProgress: true,
-      breakpoints: {
-        1025: {
-          direction: 'vertical',
-          slidesPerView: 4,
-        },
-      },
-    });
-    var swiper2 = new Swiper('.mySwiper2', {
-      loop: true,
-      spaceBetween: 10,
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-      thumbs: {
-        swiper: swiper,
-      },
-    });
-  </script>
+          <!-- Size -->
+          {product.data.sizes && product.data.sizes.length > 0 && (
+            <div class="mt-8">
+              <div class="flex items-center justify-between">
+                <h2 class="text-sm font-medium text-gray-900 dark:text-gray-100">Size</h2>
+                <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300">See sizing chart</a>
+              </div>
+              <fieldset class="mt-3">
+                <legend class="sr-only">Choose size</legend>
+                <div class="grid grid-cols-3 gap-4 sm:grid-cols-4">
+                  {product.data.sizes.map((size, index) => {
+                    const isDisabled = size === 'XL';
+                    const isSelected = size === 'S';
+                    return (
+                      <label 
+                        class={`group relative flex cursor-pointer items-center justify-center rounded-md border px-4 py-3 text-sm font-medium uppercase shadow-sm focus:outline-none ${
+                          isDisabled 
+                            ? 'cursor-not-allowed border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-400 dark:text-gray-500' 
+                            : isSelected
+                              ? 'border-gray-900 dark:border-gray-100 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
+                              : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        }`}
+                      >
+                        <input 
+                          type="radio" 
+                          name="size" 
+                          value={size.toLowerCase()} 
+                          disabled={isDisabled}
+                          checked={isSelected}
+                          class="sr-only" 
+                        />
+                        <span>{size}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </fieldset>
+            </div>
+          )}
+
+          <div class="mt-8">
+            <SnipcartBuyButton
+              id={product.data.id}
+              name={product.data.title}
+              price={product.data.onSale && product.data.salePrice ? product.data.salePrice : product.data.price}
+              url={Astro.url.pathname}
+              description={product.data.description}
+              image={product.data.image}
+              categories={product.data.collection}
+              variant="primary"
+            >
+              Add to cart
+            </SnipcartBuyButton>
+          </div>
+        </form>
+
+        <!-- Description -->
+        <div class="mt-10">
+          <h2 class="text-sm font-medium text-gray-900 dark:text-gray-100">Description</h2>
+          <div class="mt-4 space-y-6 text-base text-gray-700 dark:text-gray-300">
+            <p>{product.data.description}</p>
+          </div>
+        </div>
+
+        <!-- Fabric & Care -->
+        {product.data.fabricCare && product.data.fabricCare.length > 0 && (
+          <div class="mt-10">
+            <h2 class="text-sm font-medium text-gray-900 dark:text-gray-100">Fabric & Care</h2>
+            <ul role="list" class="mt-4 list-disc space-y-2 pl-4 text-sm text-gray-600 dark:text-gray-400">
+              {product.data.fabricCare.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <!-- Policies -->
+        <div class="mt-10 border-t border-gray-200 dark:border-gray-700 pt-10">
+          <dl class="space-y-6">
+            <div class="flex">
+              <dt class="flex items-center text-sm font-medium text-gray-900 dark:text-gray-100">
+                <svg class="h-6 w-6 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
+                </svg>
+                <span class="ml-3">Free shipping</span>
+              </dt>
+              <dd class="ml-6 text-sm text-gray-600 dark:text-gray-400">On orders over $50</dd>
+            </div>
+
+            <div class="flex">
+              <dt class="flex items-center text-sm font-medium text-gray-900 dark:text-gray-100">
+                <svg class="h-6 w-6 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span class="ml-3">Secure payment</span>
+              </dt>
+              <dd class="ml-6 text-sm text-gray-600 dark:text-gray-400">Protected checkout</dd>
+            </div>
+          </dl>
+        </div>
+
+      </div>
+    </div>
+  </div>
 </Layout>
