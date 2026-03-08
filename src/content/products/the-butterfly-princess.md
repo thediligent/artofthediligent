@@ -8,8 +8,8 @@ salePrice: 18.74
 onSale: true
 salePercent: 25
 size: 11x17
-image: /images/posters/neofuturo-poster.jpg
-description: A limited-edition poster featuring NeoFuturo’s iconic AI-generated artwork.
+image: /images/posters/butterfly-princess.webp
+description: A limited-edition poster featuring The Butterfly Princess iconic AI-generated artwork by Art Of The Diligent.
 inStock: true
 featured: true
 ---

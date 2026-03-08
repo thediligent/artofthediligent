@@ -14,6 +14,9 @@ export async function getStaticPaths() {
 
 const { product } = Astro.props;
 
+// Render markdown content
+const { Content } = await product.render();
+
 // Use product images if available
 const productImages = product.data.images || [product.data.image];
 
@@ -27,9 +30,14 @@ const breadcrumbs = [
 // Generate star ratings
 const fullStars = Math.floor(product.data.rating || 0);
 const emptyStars = 5 - Math.ceil(product.data.rating || 0);
+
+// Metadata for SEO
+const metadata = {
+  title: `${product.data.title} | Art Of The Diligent`,
+};
 ---
 
-<Layout title={`${product.data.title} | Art Of The Diligent`}>
+<Layout metadata={metadata}>
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
     
     <!-- Breadcrumb -->
@@ -97,13 +105,36 @@ const emptyStars = 5 - Math.ceil(product.data.rating || 0);
           )}
         </div>
 
-        <!-- Main image -->
+        <!-- Image Gallery -->
         <div class="mt-6 lg:mt-0">
-          <img
-            src={productImages[0]}
-            alt={product.data.title}
-            class="h-auto w-full rounded-lg object-cover object-center lg:h-full"
-          />
+          {/* Main Image Display */}
+          <div class="aspect-square w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 cursor-pointer hover:opacity-90 transition-opacity" id="mainImageContainer">
+            <img
+              id="mainProductImage"
+              src={productImages[0]}
+              alt={product.data.title}
+              class="h-full w-full object-cover object-center"
+            />
+          </div>
+          
+          {/* Thumbnail Gallery - Only show if there are multiple images */}
+          {productImages.length > 1 && (
+            <div class="mt-4 grid grid-cols-4 gap-2">
+              {productImages.map((image, index) => (
+                <button
+                  type="button"
+                  class="aspect-square overflow-hidden rounded-md border-2 border-transparent hover:border-gray-900 dark:hover:border-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100"
+                  onclick={`document.getElementById('mainProductImage').src = '${image}'`}
+                >
+                  <img
+                    src={image}
+                    alt={`${product.data.title} view ${index + 1}`}
+                    class="h-full w-full object-cover object-center"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -244,10 +275,24 @@ const emptyStars = 5 - Math.ceil(product.data.rating || 0);
         <!-- Description -->
         <div class="mt-10">
           <h2 class="text-sm font-medium text-gray-900 dark:text-gray-100">Description</h2>
-          <div class="mt-4 space-y-6 text-base text-gray-700 dark:text-gray-300">
-            <p>{product.data.description}</p>
+          <div class="mt-4 prose prose-sm max-w-none dark:prose-invert text-gray-700 dark:text-gray-300">
+            <Content />
           </div>
         </div>
+
+        <!-- Product Details -->
+        {product.data.productDetails && product.data.productDetails.length > 0 && (
+          <div class="mt-10 pt-10 border-t border-gray-200 dark:border-gray-700">
+            <h2 class="text-sm font-medium text-gray-900 dark:text-gray-100">Product Details</h2>
+            <div class="mt-4">
+              <ul class="list-disc list-inside space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                {product.data.productDetails.map((detail) => (
+                  <li>{detail}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
 
         <!-- Fabric & Care -->
         {product.data.fabricCare && product.data.fabricCare.length > 0 && (
@@ -289,4 +334,159 @@ const emptyStars = 5 - Math.ceil(product.data.rating || 0);
       </div>
     </div>
   </div>
+
+  <!-- Lightbox Modal -->
+  <div id="lightbox" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90 p-4">
+    <!-- Close button -->
+    <button 
+      id="closeLightbox" 
+      class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
+      aria-label="Close lightbox"
+    >
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- Previous arrow -->
+    {productImages.length > 1 && (
+      <button 
+        id="prevImage" 
+        class="absolute left-4 text-white hover:text-gray-300 transition-colors z-10"
+        aria-label="Previous image"
+      >
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+    )}
+
+    <!-- Image container -->
+    <div class="relative max-w-7xl max-h-full">
+      <img 
+        id="lightboxImage" 
+        src="" 
+        alt={product.data.title}
+        class="max-w-full max-h-[90vh] object-contain"
+      />
+      
+      <!-- Image counter -->
+      {productImages.length > 1 && (
+        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-full text-sm">
+          <span id="imageCounter">1 / {productImages.length}</span>
+        </div>
+      )}
+    </div>
+
+    <!-- Next arrow -->
+    {productImages.length > 1 && (
+      <button 
+        id="nextImage" 
+        class="absolute right-4 text-white hover:text-gray-300 transition-colors z-10"
+        aria-label="Next image"
+      >
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    )}
+  </div>
+
+  <script define:vars={{ productImages }}>
+    let currentImageIndex = 0;
+    const images = productImages;
+    
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const mainImageContainer = document.getElementById('mainImageContainer');
+    const mainImage = document.getElementById('mainProductImage');
+    const closeLightboxBtn = document.getElementById('closeLightbox');
+    const prevBtn = document.getElementById('prevImage');
+    const nextBtn = document.getElementById('nextImage');
+    const imageCounter = document.getElementById('imageCounter');
+
+    // Open lightbox when clicking main image
+    mainImageContainer?.addEventListener('click', () => {
+      currentImageIndex = images.indexOf(mainImage.src);
+      if (currentImageIndex === -1) currentImageIndex = 0;
+      openLightbox();
+    });
+
+    // Update thumbnails to also open lightbox when clicked
+    const thumbnails = document.querySelectorAll('[onclick*="mainProductImage"]');
+    thumbnails.forEach((thumbnail, index) => {
+      thumbnail.addEventListener('click', (e) => {
+        e.preventDefault();
+        currentImageIndex = index;
+        mainImage.src = images[index];
+        openLightbox();
+      });
+      // Remove inline onclick
+      thumbnail.removeAttribute('onclick');
+    });
+
+    function openLightbox() {
+      lightbox?.classList.remove('hidden');
+      updateLightboxImage();
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox?.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    function updateLightboxImage() {
+      if (lightboxImage && images[currentImageIndex]) {
+        lightboxImage.src = images[currentImageIndex];
+        if (imageCounter) {
+          imageCounter.textContent = `${currentImageIndex + 1} / ${images.length}`;
+        }
+      }
+    }
+
+    function showPrevImage() {
+      currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+      updateLightboxImage();
+    }
+
+    function showNextImage() {
+      currentImageIndex = (currentImageIndex + 1) % images.length;
+      updateLightboxImage();
+    }
+
+    // Close button
+    closeLightboxBtn?.addEventListener('click', closeLightbox);
+
+    // Navigation buttons
+    prevBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showPrevImage();
+    });
+
+    nextBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showNextImage();
+    });
+
+    // Close when clicking outside the image
+    lightbox?.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox?.classList.contains('hidden')) {
+        if (e.key === 'Escape') {
+          closeLightbox();
+        } else if (e.key === 'ArrowLeft') {
+          showPrevImage();
+        } else if (e.key === 'ArrowRight') {
+          showNextImage();
+        }
+      }
+    });
+  </script>
 </Layout>

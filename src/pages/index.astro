@@ -150,47 +150,12 @@ const metadata = {
     />
   </div>
 
-  <!-- CardGrid2 Widget ************** -->
-  <div class="text-center pt-8 mb-0">
-    <h2 class="font-black dark:text-white text-5xl lg:text-5xl mb-4 font-heading uppercase">Featured Artwork</h2>
-    <p class="text-lg text-gray-600 dark:text-gray-400 pb-6">
-      Each season, we collaborate with world-class designers to create a collection inspired by the natural world.
-    </p>
-  </div>
-  <ProductGrid
-    products={[
-      {
-        title: 'Butterfly Princess',
-        url: '/products/the-butterfly-princess',
-        image: artofthediligent,
-        alt: 'Art of the Diligent',
-        price: '21.99',
-      },
-      {
-        title: 'Sunlit Shores',
-        url: '/',
-        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_24x18_framed-canvas-hero_walnut_float/prod/artwork/DNA/0HY/MIN-0HY-DNA_A_CANVAS_MUSEUM.jpg?_TH?mntd_prf=Category:ProductImage_0',
-        alt: 'By Rachel Nelson',
-        price: '',
-      },
-     {
-        title: 'Butterfly Princess',
-        url: '/products/the-butterfly-princess',
-        image: artofthediligent,
-        alt: 'Art of the Diligent',
-        price: '21.99',
-      },
-      {
-        title: 'Butterfly Princess',
-        url: '/products/the-butterfly-princess',
-        image: artofthediligent,
-        alt: 'Art of the Diligent',
-        price: '21.99',
-      },
-    ]}
-    colsSm={2}
-    colsMd={3}
-    colsLg={3}
+  <!-- Featured Artwork ************** -->
+  <FeaturedProducts 
+    limit={4}
+    columns={4}
+    title="Featured Artwork"
+    subtitle="Each season, we collaborate with world-class designers to create a collection inspired by the natural world."
   />
 
   <section class="py-12">

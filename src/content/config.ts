@@ -115,6 +115,7 @@ const productCollection = defineCollection({
     image: z.string(),
     description: z.string(),
     fabricCare: z.array(z.string()).optional(),
+    productDetails: z.array(z.string()).optional(),
     inStock: z.boolean().default(true),
     featured: z.boolean().default(false),
   }),
