@@ -10,6 +10,8 @@ images:
   - /images/posters/enlightened-bodhishatvha-art-of-the-diligent.jpg
   - /images/posters/enlightened-bodhisatvha/enlightened-bodhishatvha-art-of-the-diligent-poster-875x1024.jpg
   - /images/posters/enlightened-bodhisatvha/enlightened-bodhishatvha-art-of-the-diligent-mockup1.jpg
+  - /images/posters/enlightened-bodhisatvha/bodhisatvha-poster.webp
+  - /images/posters/enlightened-bodhisatvha/bodhisatvha-poster2.webp
 description: In the golden hush of dawn, she sits—eternal yet timeless—upon a throne of blooming lotuses, eyes gently closed in profound stillness.
 productDetails:
   - 11×17 inches, unframed

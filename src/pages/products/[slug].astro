@@ -412,14 +412,13 @@ const metadata = {
       openLightbox();
     });
 
-    // Update thumbnails to also open lightbox when clicked
+    // Update thumbnails to change main image without opening lightbox
     const thumbnails = document.querySelectorAll('[onclick*="mainProductImage"]');
     thumbnails.forEach((thumbnail, index) => {
       thumbnail.addEventListener('click', (e) => {
         e.preventDefault();
         currentImageIndex = index;
         mainImage.src = images[index];
-        openLightbox();
       });
       // Remove inline onclick
       thumbnail.removeAttribute('onclick');
