@@ -68,8 +68,40 @@ const mostRead = articles.sort((a, b) => {
   return dateB - dateA;
 }).slice(0, 3);
 
+// Featured artists roster for homepage rotation (beta)
+const artistRoster = [
+  {
+    name: 'The Diligent',
+    handle: 'Art of the Diligent',
+    bio: 'Paintings, digital art, and AI-based work. Founder of Art Evolves.',
+    image: artofthediligent.src,
+    url: '/',
+  },
+  {
+    name: 'Thamer Ossra',
+    handle: '@PanoramaJasmin',
+    bio: 'Creative Director and AI artist. Style-blending across semi-anime, dark fantasy, and cosmic work.',
+    image: featuredSpot.src,
+    url: 'https://x.com/PanoramaJasmin',
+  },
+  {
+    name: 'The Shadow Governor',
+    handle: '@shadow_governor',
+    bio: 'Observations series under SYSTEM. Monumental conceptual and dark surreal work.',
+    image: artImage.src,
+    url: 'https://x.com/shadow_governor',
+  },
+  {
+    name: 'Julian C',
+    handle: '@Julianc_AI',
+    bio: 'Character work and vibrant cultural portraits. Multi-tool pipeline with Midjourney and ComfyUI.',
+    image: cultureImage.src,
+    url: 'https://x.com/Julianc_AI',
+  },
+];
+
 const metadata = {
-  title: 'Art Of The Diligent — Free template for creating websites with Astro + Tailwind CSS',
+  title: 'Art Evolves — Art, Culture, Music & Fashion at the Edge of AI',
   ignoreTitleTemplate: true,
 };
 ---
@@ -84,13 +116,12 @@ const metadata = {
         <div class="text-center">
           <div class="container px-4 mx-auto">
             <div class="max-w-4xl mx-auto text-center">
-              <span class="text-gray-200 font-semibold uppercase st">ART OF THE DILIGENT</span>
+              <span class="text-gray-200 font-semibold uppercase st">ART EVOLVES</span>
               <h2 class="mt-8 mb-6 text-5xl lg:text-7xl font-bold font-heading text-gray-100">
-                Posters and Fine Art Prints
+                Art, Culture, Music & Fashion at the Edge of AI
               </h2>
               <p class="max-w-3xl mx-auto mb-10 text-lg text-gray-300">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laborum sit cum iure qui, nostrum at sapiente
-                ducimus.
+                Curated features, artist profiles, and cultural observation from the post-AI world. Featuring painters, digital artists, and generative creators.
               </p>
             </div>
           </div>
@@ -99,12 +130,32 @@ const metadata = {
     </div>
   </header>
 
+  <!-- Featured Artists Rotation (beta) -->
+  <section class="py-12 px-4">
+    <div class="text-center mb-10">
+      <h2 class="font-black dark:text-white text-4xl lg:text-5xl mb-4 font-heading uppercase">Featured Artists</h2>
+      <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+        A rotating roster of artists working across traditional, digital, and AI practices. Interviews and deeper features coming soon.
+      </p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+      {artistRoster.map((artist) => (
+        <a href={artist.url} class="block group" target="_blank" rel="noopener">
+          <img src={artist.image} alt={artist.name} class="w-full h-48 object-cover rounded-lg mb-4" />
+          <h3 class="text-xl font-semibold">{artist.name}</h3>
+          <p class="text-sm text-gray-500">{artist.handle}</p>
+          <p class="text-gray-600 dark:text-gray-400 mt-2">{artist.bio}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
   <!-- Shop Collections Widget ************** -->
   <div class="my-4">
     <div class="text-center pt-10 mb-0">
-      <h2 class="font-black dark:text-white text-5xl lg:text-5xl mb-4 font-heading uppercase">Art Your Way</h2>
+      <h2 class="font-black dark:text-white text-5xl lg:text-5xl mb-4 font-heading uppercase">Prints & Editions</h2>
       <p class="text-lg text-gray-600 dark:text-gray-400">
-        Each season, we collaborate with world-class designers to create a collection inspired by the natural world.
+        Work from The Diligent and featured artists, available as prints and editions.
       </p>
     </div>
 
@@ -155,7 +206,7 @@ const metadata = {
     limit={4}
     columns={4}
     title="Featured Artwork"
-    subtitle="Each season, we collaborate with world-class designers to create a collection inspired by the natural world."
+    subtitle="Selected pieces from The Diligent and the Art Evolves roster."
   />
 
   <section class="py-12">
@@ -167,13 +218,12 @@ const metadata = {
         <div class="text-center">
           <div class="container px-4 mx-auto">
             <div class="max-w-4xl mx-auto text-center">
-             <span class="text-gray-200 font-semibold uppercase st">THOUGHTS</span>
+             <span class="text-gray-200 font-semibold uppercase st">CULTURE</span>
               <h2 class="mt-8 mb-6 text-5xl lg:text-7xl font-bold font-heading text-gray-100">
-                Artist Musings
+                Notes from the Edge
               </h2>
               <p class="max-w-3xl mx-auto mb-10 text-lg text-gray-300">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laborum sit cum iure qui, nostrum at sapiente
-                ducimus.
+                Observations on AI, authorship, process, and the cultural lines creators are navigating.
               </p>
             </div>
           </div>
@@ -181,189 +231,11 @@ const metadata = {
       </div>
     </div>
   </section>
-  <!-- Artists Writings -->
-  <section class="my-3 py-0 px-4 lg:px-6">
-    <!-- CardGrid Widget **************
-    <CardGrid2
-      categories={[
-        {
-          title: 'Fashion',
-          url: '/fashion',
-          image: fashionImage,
-          alt: 'Fashion category',
-        },
-        {
-          title: 'News',
-          url: '/news',
-          image: newsImage,
-          alt: 'News category',
-        },
-        {
-          title: 'Culture',
-          url: '/culture',
-          image: cultureImage,
-          alt: 'Culture category',
-        },
-        {
-          title: 'Music',
-          url: '/music',
-          image: musicImage,
-          alt: 'Music category',
-        },
-        {
-          title: 'Art',
-          url: '/art',
-          image: artImage,
-          alt: 'Art category',
-        },
-        {
-          title: 'Architecture',
-          url: '/architecture',
-          image: architectureImage,
-          alt: 'Architecture category',
-        },
-      ]},
-      colsSm={2}
-      colsMd={3}
-      colsLg={6}
-    /> -->
-    <div class="mt-5 py-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-      {
-        featuredArtists.map((article) => (
-          <a href={getPermalink(cleanSlug(article.data.category) + '/' + cleanSlug(article.data.title))} class="block">
-            <img src={article.data.image} alt={article.data.title} class="w-full h-48 object-cover rounded" />
-            <h3 class="text-xl font-semibold mt-4">{article.data.title}</h3>
-            <p class="text-gray-600">{article.data.excerpt}</p>
-          </a>
-        ))
-      }
-    </div>
-  </section>
-
-<div class="text-center pt-10 mb-0">
-    <h2 class="font-black dark:text-white text-5xl lg:text-5xl mb-4 font-heading uppercase">Recent Work</h2>
-    <p class="text-lg text-gray-600 dark:text-gray-400 pb-6">
-      Each season, we collaborate with world-class designers to create a collection inspired by the natural world.
-    </p>
-  </div>
-    <ProductGrid
-    products={[
-      {
-        title: 'Sunlit Shores',
-        url: '/',
-        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_24x18_framed-canvas-hero_walnut_float/prod/artwork/DNA/0HY/MIN-0HY-DNA_A_CANVAS_MUSEUM.jpg?_TH?mntd_prf=Category:ProductImage_0',
-        alt: 'By Rachel Nelson',
-        price: '',
-      },
-      {
-        title: 'Lemonade Stand',
-        url: '/',
-        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_18x24_framed-canvas-hero_natural_float/prod/artwork/DNA/SCV/MIN-SCV-DNA_A_CANVAS_MUSEUM.jpg?_TH?mntd_prf=Category:ProductImage_1',
-        alt: 'By Marie Stone',
-        price: '',
-      },
-      {
-        title: 'Game Time',
-        url: '/',
-        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_24x18_white_hero/prod/artwork/DNA/218/MIN-218-DNA_A_FLT.jpg?_TH?mntd_prf=Category:ProductImage_2',
-        alt: 'By Lindseyerin',
-        price: '',
-      },
-      {
-        title: 'The Beauty Within',
-        url: '/',
-        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_18x24_natural_hero/prod/artwork/DNA/34G/MIN-34G-DNA_A_FLT.jpg?_TH?mntd_prf=Category:ProductImage_3',
-        alt: 'By Paola Benenati',
-        price: '',
-      },
-      {
-        title: 'L.a I Love You',
-        url: '/',
-        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_24x18_walnut_hero/prod/artwork/DNA/JBT/MIN-JBT-DNA_A_FLT.jpg?_TH?mntd_prf=Category:ProductImage_4',
-        alt: 'By Chelsea Victoria',
-        price: '',
-      },
-      {
-        title: 'Flowing Dusk',
-        url: '/',
-        image: 'https://lonefox.com/cdn/shop/files/monumental-still-life-with-fruits-and-flowers-by-georges-wesche-belgium-1960s-9308275_600x.jpg?v=1751872995',
-        alt: 'By Em Hale',
-        price: '',
-      },
-      {
-        title: 'Pieces Of The Sky',
-        url: '/',
-        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_18x24_framed-canvas-hero_black_float/prod/artwork/DNA/II9/MIN-II9-DNA_A_CANVAS_GALLERY.jpg?_TH?',
-        alt: 'By Ella Frödin',
-        price: '',
-      },
-      {
-        title: 'Fire Flower',
-        url: '/',
-        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_24x24_framed-canvas-hero_walnut_float/prod/artwork/DNA/C16/MIN-C16-DNA_A_CANVAS_GALLERY.jpg?_TH?',
-        alt: 'By Synnöve Seidman',
-        price: '',
-      },
-      {
-        title: 'Famous Food Blue',
-        url: '/',
-        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_18x24_walnut_hero/prod/artwork/DNA/MAU/MIN-MAU-DNA_A_FLT.jpg?_TH?',
-        alt: 'By Andrew Mcclintock',
-        price: '',
-      },
-      {
-        title: 'Famous Food Black',
-        url: 'https://www.minted.com/product/art/MIN-NNO-DNA/famous-food-black?color=A&greeting=&shape=&art_group=art_print',
-        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_18x24_walnut_hero/prod/artwork/DNA/NNO/MIN-NNO-DNA_A_FLT.jpg?_TH?',
-        alt: 'By Andrew Mcclintock',
-        price: '',
-      },
-      {
-        title: 'Mr Bings Cocktail Lounge',
-        url: 'https://www.minted.com/product/art/MIN-S9X-DNA/mr-bings-cocktail-lounge?color=A&greeting=&shape=&art_group=art_print',
-        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_24x24_black_hero/prod/artwork/DNA/S9X/MIN-S9X-DNA_A_FBL.jpg?_TH?',
-        alt: 'By Austin Warnock',
-        price: '',
-      },
-      {
-        title: 'Cotton Candy Dreams',
-        url: 'https://www.minted.com/product/art/MIN-6V9-DNA/cotton-candy-dreams?color=A&greeting=&shape=&art_group=canvas',
-        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_18x24_framed-canvas-hero_white_float/prod/artwork/DNA/6V9/MIN-6V9-DNA_A_CANVAS_GALLERY.jpg?_TH?',
-        alt: 'By Elizabeth Ulrich',
-        price: '',
-      },
-      {
-        title: 'Checkers 1',
-        url: 'https://www.minted.com/product/art/MIN-1GP-DNA/checkers-1?color=A&greeting=&shape=&art_group=canvas',
-        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_24x24_framed-canvas-hero_natural_float/prod/artwork/DNA/1GP/MIN-1GP-DNA_A_CANVAS_GALLERY.jpg?_TH?',
-        alt: 'By Lindsay Megahed',
-        price: '',
-      },
-      {
-        title: 'Checkers 2',
-        url: 'https://www.minted.com/product/art/MIN-TQP-DNA/checkers-2?color=A&greeting=&shape=&art_group=canvas',
-        image: 'https://assets.minted.com/image/upload/c_scale,w_500,t_24x24_framed-canvas-hero_natural_float/prod/artwork/DNA/TQP/MIN-TQP-DNA_A_CANVAS_GALLERY.jpg?_TH?',
-        alt: 'By Lindsay Megahed',
-        price: '',
-      },
-    ]}
-    colsSm={2}
-    colsMd={3}
-    colsLg={3}
-  />
-
-  <!-- Featured Products from Collection -->
-  <FeaturedProducts 
-    limit={8}
-    columns={4}
-    title="Shop Our Collection"
-    subtitle="Curated products from our latest collection"
-  />
 
   <!-- Newsletter Signup -->
   <section class="py-16 text-center bg-primary text-white">
     <h2 class="text-3xl font-bold mb-4">Stay Informed</h2>
-    <p class="text-lg mb-8">Get exclusive art insights and updates.</p>
+    <p class="text-lg mb-8">Get exclusive AI art insights, artist features, and updates from Art Evolves.</p>
     <form class="flex justify-center gap-4">
       <input type="email" placeholder="Enter your email" class="p-2 rounded text-black w-64" />
       <button type="submit" class="bg-black text-primary-500 px-6 py-2 rounded hover:bg-gray-200">Subscribe</button>
