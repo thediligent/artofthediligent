@@ -150,12 +150,35 @@ const metadata = {
     </div>
   </section>
 
-  <!-- Shop Collections Widget ************** -->
-  <div class="my-4">
-    <div class="text-center pt-10 mb-0">
-      <h2 class="font-black dark:text-white text-5xl lg:text-5xl mb-4 font-heading uppercase">Prints & Editions</h2>
-      <p class="text-lg text-gray-600 dark:text-gray-400">
-        Work from The Diligent and featured artists, available as prints and editions.
+  <section class="py-12">
+    <div
+      class="w-full h-[600px] bg-center bg-cover bg-no-repeat"
+      style='background-image: url("https://s3.us-east-1.amazonaws.com/artofthediligent.com/testArt/diligentmarketingsolutions_A_tarot_card_portrait_of_Teyonah_Par_8e49e883-d330-419f-ae4c-5b4282f3a631.webp");'
+    >
+      <div class="flex items-center justify-center w-full h-full bg-gray-900 bg-opacity-50 py-28">
+        <div class="text-center">
+          <div class="container px-4 mx-auto">
+            <div class="max-w-4xl mx-auto text-center">
+             <span class="text-gray-200 font-semibold uppercase st">CULTURE</span>
+              <h2 class="mt-8 mb-6 text-5xl lg:text-7xl font-bold font-heading text-gray-100">
+                Notes from the Edge
+              </h2>
+              <p class="max-w-3xl mx-auto mb-10 text-lg text-gray-300">
+                Observations on AI, authorship, process, and the cultural lines creators are navigating.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products / Artist Support (lower on page) -->
+  <section class="py-16 px-4">
+    <div class="text-center mb-10">
+      <h2 class="font-black dark:text-white text-4xl lg:text-5xl mb-4 font-heading uppercase">Support the Artists</h2>
+      <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+        Prints, editions, and merch from The Diligent and featured artists. Artists keep the majority; Art Evolves takes a small percentage so they don’t need their own shop.
       </p>
     </div>
 
@@ -199,38 +222,15 @@ const metadata = {
         },
       ]}
     />
-  </div>
+  </section>
 
-  <!-- Featured Artwork ************** -->
+  <!-- Featured Artwork -->
   <FeaturedProducts 
     limit={4}
     columns={4}
-    title="Featured Artwork"
+    title="Available Now"
     subtitle="Selected pieces from The Diligent and the Art Evolves roster."
   />
-
-  <section class="py-12">
-    <div
-      class="w-full h-[600px] bg-center bg-cover bg-no-repeat"
-      style='background-image: url("https://s3.us-east-1.amazonaws.com/artofthediligent.com/testArt/diligentmarketingsolutions_A_tarot_card_portrait_of_Teyonah_Par_8e49e883-d330-419f-ae4c-5b4282f3a631.webp");'
-    >
-      <div class="flex items-center justify-center w-full h-full bg-gray-900 bg-opacity-50 py-28">
-        <div class="text-center">
-          <div class="container px-4 mx-auto">
-            <div class="max-w-4xl mx-auto text-center">
-             <span class="text-gray-200 font-semibold uppercase st">CULTURE</span>
-              <h2 class="mt-8 mb-6 text-5xl lg:text-7xl font-bold font-heading text-gray-100">
-                Notes from the Edge
-              </h2>
-              <p class="max-w-3xl mx-auto mb-10 text-lg text-gray-300">
-                Observations on AI, authorship, process, and the cultural lines creators are navigating.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- Newsletter Signup -->
   <section class="py-16 text-center bg-primary text-white">
